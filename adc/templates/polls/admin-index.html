@@ -1,0 +1,181 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html class="cc">
+<head>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <!--<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>稳速设备后台管理系统</title>
+    <meta name="description" content="稳速设备后台管理系统">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}"/>
+    <link rel="apple-touch-icon-precomposed" href="{% static 'app-icon72x72@2x.png' %}"/>
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+    <script src="{% static 'rem.min.js' %}"></script>
+    <script src="{% static 'respond.min.js' %}"></script>
+    <script src="{% static 'amazeui.legacy.js' %}"></script>
+    <![endif]-->
+
+    <script src="{% static 'jquery.min.js' %}"></script>
+    <script src="{% static 'amazeui.min.js' %}"></script>
+    <!--<![endif]-->
+    <script src="{% static 'app.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'amazeui.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'admin.css' %}"/>
+
+    <script src="{% static 'jsapi.js' %}"></script>
+    <script src="{% static 'corechart.js' %}"></script>
+    <script src="{% static 'jquery.gvChart-1.0.1.min.js' %}"></script>
+    <script src="{% static 'jquery.ba-resize.min.js' %}"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    {% block js %}
+    {% endblock %}
+</head>
+<body>
+
+<header class="am-topbar admin-header">
+    <div class="am-topbar-brand">
+        <strong>稳速设备后台管理系统</strong>
+        <small>V1.0</small>
+    </div>
+
+  <span class="am-sr-only">导航切换</span>
+
+    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    <span class="glyphicon glyphicon-knight"></span> 欢迎你:{{ request.user.username }}
+                </a>
+                {#                <ul class="am-dropdown-content">#}
+                {#                    <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>#}
+                {#                    <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>#}
+                {#                    <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>#}
+                {#                </ul>#}
+            </li>
+            <li><a href="{% url 'adc:out' %}" id="ad"><span class="glyphicon glyphicon-menu-right"></span> <span
+                    class="admin-fullText">退出</span></a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="am-cf admin-main" style="background: #ffffff">
+    <!-- sidebar start -->
+    <div class="admin-sidebar">
+        <ul class="am-list admin-sidebar-list">
+            <li><a href="{% url 'adc:index' %}"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+            <li class="admin-parent">
+                <a class="am-cf" ><span
+                        class="glyphicon glyphicon-cog"></span> 模块查询
+                </a>
+                <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav">
+                    <li id="publicproducts"><a href="{% url 'adc:Cabview' %}">光缆</a></li>
+                    <li id="productlists"><a href="{% url 'adc:Fibe' %}">光纤</a></li>
+                    <li id="shop"><a href="{% url 'adc:Channel' %}">波道</a></li>
+                    <li id="shop"><a href="{% url 'adc:Wsr' %}">波道路由</a></li>
+
+                    {#                    <li id="mysaled"><a href="{% url 'adc:Fibe' %}">波道路由</a></li>#}
+                </ul>
+            </li>
+            <li><a href="#"><span class="glyphicon glyphicon-book"></span> 权限和用户</a>
+                <ul class="am-list am-collapse admin-sidebar-sub am-in" id="cs-nav">
+                    {% if request.user.is_superuser %}
+                        <li id="shop"><a href="{% url 'adc:Uses' %}">用户管理</a></li>
+
+                    {% endif %}
+                    <li id="shop"><a href="{% url 'adc:setting' %}">个人密码修改</a></li>
+
+
+                    {#                    <li id="mysaled"><a href="{% url 'adc:Fibe' %}">波道路由</a></li>#}
+                </ul>
+            </li>
+{% if request.user.is_superuser %}
+            <li><a href="{% url 'adc:lgcat' %}"><span class="glyphicon glyphicon-user"></span> 日志系统</a></li>
+         {% endif %}
+        </ul>
+
+
+    </div>
+    <!-- sidebar end -->
+
+    <!-- content start -->
+    <div class="admin-content">
+        {% block main %}
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">首页</strong> /
+                    <small>一些常用模块</small>
+                </div>
+            </div>
+
+            <ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list ">
+                <li><a href="{% url 'adc:Cabview' %} class="am-text-success"><br/>光缆数量<br/>{{ Cab }}</a>
+                </li>
+                <li><a href="{% url 'adc:Fibe' %}" class="am-text-warning"><br/>光纤数量<br/>{{ Fibe }}</a>
+                </li>
+                <li><a href="{% url 'adc:Channel' %}" class="am-text-danger"><br/>波道数量<br/>{{ Channel }}</a>
+                </li>
+                <li><a href="{% url 'adc:Wsr' %}"class="am-text-secondary"><br/>波道路由<br/>{{ ChR }}</a>
+                </li>
+
+            </ul>
+          {% if request.user.is_superuser %}
+            <div class="am-cf am-padding">
+
+                        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">日志</strong> /
+                    <small>最近操作</small>
+                </div>
+
+
+            </div>
+            <div class="am-g">
+                <div class="am-u-sm-12">
+                    <table class="am-table am-table-bd am-table-striped admin-content-table">
+                        <thead>
+                        <tr>
+                            <th>操作类型</th>
+                            <th>操作时间</th>
+                            <th>编号</th>
+                            <th>操作用户</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for list in log %}
+                        <tr>
+                            <td>{{ list.logname }}</td>
+                            <td>{{ list.Credate }}</td>
+                            <td>{{ list.content }}</td>
+                            <td>{{ list.userid }}</td>
+
+                        </tr>
+                    {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+  {% else %}
+
+                    {% endif %}
+
+            </div>
+            <!-- content end -->
+        {% endblock %}
+</div>
+
+<footer>
+    <hr>
+</footer>
+
+<!--[if lt IE 9]>
+
+</body>
+</html>

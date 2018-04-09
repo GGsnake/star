@@ -1,0 +1,47 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        function back() {
+            window.location.href = document.referrer
+        }
+    </script>
+{% endblock %}
+{% block main %}
+    <div style="float: left">
+        {% for choice in name %}
+            <form class="form-inline pull-right" role="form" method="post" enctype="multipart/form-data"
+                  action="{% url 'adc:userdate' %}"
+                  accept-charset="utf-8">
+                {% csrf_token %}
+                <div class="panel panel-default" style="margin-left: 8px;min-width: 1100px;max-width: 1150px">
+
+
+                    <div class="panel-body">
+                        用户名&nbsp&nbsp&nbsp: <input type="text" name="username" readonly="readonly" class="form-control"
+                                    value="{{ choice.username }}">
+
+                    </div>
+                    <div class="panel-body" style="float: inherit" >
+                        修改密码:<input type="password" name="password" class="form-control">
+
+                    </div>
+                    <div class="pp" style="width: 110px;margin-left: 13px ">
+                        <button type="submit" value="完成"
+                                class="btn btn-default btn-sm">
+                            完成
+                        </button>
+
+
+                        <button type="button" name="back" value="返回"
+
+                                onclick="window.location.href='Uses'"
+                                class="btn btn-default btn-sm">返回
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

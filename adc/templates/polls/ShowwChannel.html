@@ -1,0 +1,59 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        function load() {
+
+        }
+
+        function back() {
+            window.location.href = "Channel"
+        }
+
+        $(document).ready(function () {
+            load();
+        });
+
+    </script>
+{% endblock %}
+{% block main %}
+    <div class="span4">
+
+        {% for choice in name %}
+            <div class="panel panel-default" style="width: 40%;float: left">
+                <div class="panel-heading">
+                    <h3 class="panel-title">波道编号:{{ choice.Channelname }}</h3>
+                </div>
+                <div class="panel-body" style="margin:10px;border:0;padding:0;font-weight: bolder">
+                    A机柜:{{ choice.Acap }}<br>
+                    B机柜:{{ choice.Bcap }}<br>
+                    业务: {{ choice.Business }}<br>
+                    客户: {{ choice.Customer }}<br>
+                    A机位: {{ choice.Aposition }}<br>
+                    B机位: {{ choice.Bposition }}<br>
+                    主要负责人: {{ choice.Mainman }}<br>
+                    备份负责人: {{ choice.BkMan }}<br>
+                    A波道: {{ choice.AChannel }}<br>
+                    B波道: {{ choice.BChannel }}<br>
+                    A端资产: {{ choice.Aequipment }}<br>
+                    B端资产: {{ choice.Bequipment }}<br>
+                    A端设备: {{ choice.Aassets }}<br>
+                    B端设备: {{ choice.Bassets }}<br>
+                    <input type="button" name="back" class="btn btn-default btn-sm" value="返回"
+                           onclick="back()"/>
+                </div>
+
+            </div>
+            <div class="panel panel-default" style="width: 60%;float: right">
+                <div class="panel-body">
+                    <h2>所属光纤</h2>
+                    {% for choice in Fibes %}
+                        <a href='Show?id={{ choice }}'>{{ choice }}</a><br>
+                    {% endfor %}
+
+                </div>
+            </div>
+            </div>
+
+        {% endfor %}
+
+{% endblock %}

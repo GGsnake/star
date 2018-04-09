@@ -1,0 +1,210 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+
+
+    <script>
+        function deleteef(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "deluser/",
+                        data: {id: id},
+                        success: function (data) {
+                            alert("删除成功")
+                            location.reload();
+                            $('#' + id).empty()
+                        }
+                    })
+            });
+        };
+        var page = 1;
+        var toall = 0;
+
+        function onload(item) {
+            $('#tabb').append(" <tr id=\"" + item.USERNAME + "\">\n" +
+                "                        <th>" +  item.USERNAME  + "</th>\n" +
+                "                        <th>" + item.CRE + "</th>\n" +
+                "                        <th>" + item.LAST + "</th>\n" +
+                "                        <th>" + " <button type=\"button\"  onclick=\"window.location.href='userupdate?id=" + item.USERNAME + "'\" name=\"" + item.FibreName + "\"\n" +
+                "                                 style=\"color: white;background-color: deepskyblue\"           class=\"btn btn-default btn-sm\">修改" +
+                "                                    </button>" +
+                "  <button type=\"button\"  style=\"background-color: #ea1328;color: white\" onclick=\"deleteef(this)\" name=\"" + item.USERNAME + "\" class=\"btn btn-default btn-sm\">删除</button>\n"
+                + "</th>\n" +
+                "                    </tr>")
+        }
+
+        function blank() {
+            $('#tabb').append(" <tr id=\"" + "" + "\">\n" +
+                "                        <th>" + "<a href='Show?id=" + "" + "'>" + "" + "</a>" + "</th>\n" +
+                "                        <th>" + "未找到" + "</th>" +   "                        <th>" + "未找到" + "</th>" +   "                        <th>" + "未找到" + "</th>" +
+                "\n"
+            )
+        }
+
+        var pagesize = 8;
+
+        function Loac() {
+            var username;
+            if ($("#username").val() != "") {
+                username = $("#username").val();
+            }
+            $.ajax({
+                url: "QureyUser/",
+                data: {username: username, pagesize: pagesize},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data.mo, function (i, item) {
+                        if (item.username == "") {
+                            blank();
+                            toall = 0;
+                            $("#toall").text("总共" + "0" + "页");
+                        }
+                        else {
+                            onload(item)
+                            toall = data.map;
+                            $("#toall").text("总共" + toall + "页");
+                        }
+                    });
+                }
+            })
+        }
+       var page=1;
+        function load() {
+            var pagesize = 8;
+            var username;
+            if ($("#username").val() != "") {
+                username = $("#username").val();
+            }
+            {#        if ($("#Firbenumber").val() != "") {#}
+            {#            fis = $("#Firbenumber").val();#}
+            {#        }#}
+            {#        if ($("#channel").val() != "") {#}
+            {#            channel = $("#channel").val();#}
+            {#        }#}
+            {#        if ($("#pagesize").val() != "") {#}
+            {#            var pagesize = $("#pagesize").val();#}
+            {#        }#}
+            {# 记录初始化的显示数 #}
+            $.ajax({
+                url: "QureyUser/",
+                data: {username: username, pagesize: pagesize, page: page},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data.mo, function (i, item) {
+                        if (item.username == "") {
+                            blank();
+                            toall = 0;
+                            $("#toall").text("总共" + "0" + "页");
+                        }
+                        else {
+                            onload(item)
+                            toall = data.map;
+                            $("#toall").text("总共" + toall + "页");
+                        }
+                    });
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            Loac();
+            $("#prev").click(function () {
+                if (page > 1) {
+                    page = page - 1;
+                    load(); //加载数据
+                    $("#pageid").text("当前是第" + page + "页");
+                }
+            });
+            $("#next").click(function () {
+                if (page < toall) {
+                    page = page + 1;
+                    load(); //加载数据
+                    $("#pageid").text("当前是第" + page + "页");
+
+
+                }
+            });
+            $("#quee").click(function () {
+                page = 1
+                $("#cid").text("当前是第" + page + "页");
+                if ($("#username").val() != "") {
+                    var username = $("#username").val();
+                }
+                $.ajax({
+                    url: "QureyUser/",
+                    data: {username: username,},
+                    success: function (data) {
+                        $('#tabb').empty()
+                        jQuery.each(data.mo, function (i, item) {
+                            if (item.username == "未找到") {
+                                blank();
+                                toall = 0;
+                                $("#toall").text("总共" + "0" + "页");
+                            }
+                            else {
+                                toall = data.map;
+                                onload(item)
+                                $("#toall").text("总共" + toall + "页");
+                            }
+                        });
+                    }
+                })
+            });
+        });
+    </script>
+{% endblock %}
+{% block main %}
+    <div class="contentmain">
+        <div class="search">
+            <div style="width: 222px ;padding: 1px;margin-left: 10px">
+                <sapn>用户名</sapn>
+                <input type="text" name="username"
+                       id="username"
+                       class="form-control">
+            </div>
+            <div style="width: 222px ;padding: 11px;margin-left: 3px">
+
+                <button type="submit" id="quee" class="btn btn-default"
+                        style="background-color: #3e8f3e;color: white;float: left">
+                    查询用户
+                </button>
+                <button type="submit" id="add" onclick="window.location.href='usadd'" class="btn btn-default"
+                        style="background-color: #23ccfe;color: white">
+                    添加用户
+                </button>
+            </div>
+        </div>
+        <div class="cc" style="width: 750px;margin-left: 6px">
+            <table id="xs" style="margin-left: 7px;margin-right: 8px;min-width: 600px"
+                   class="table table-bordered table-hover">
+                <thead>
+                <tr id="s">
+                    <th width="12%">用户名</th>
+                    <th width="31%">创建时间</th>
+                    <th width="31%">最后登录</th>
+                    <th width="17%">操作</th>
+                </tr>
+                </thead>
+                <tbody id="tabb">
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination" id="pge" style="margin-left: 11px">
+     <span class="step-links">
+           <input id="prev" type="button" class="btn btn-default btn-sm" value="上一页">
+        <span class="current" id="pageid">
+            当前第1页
+        </span>
+          <input id="next" class=" btn btn-default btn-sm" type="button" value="下一页">
+    <span class="cc" id="toall">
+            总共
+        </span>
+    </span>
+        </div>
+
+    </div>
+{% endblock %}

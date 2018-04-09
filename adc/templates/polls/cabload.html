@@ -1,0 +1,137 @@
+{% load staticfiles %}
+<style>
+</style>
+<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-theme.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-theme.min.css' %}"/>
+<script src="{% static 'jquery-3.3.1.js' %}"></script>
+<html lang="en">
+<head>
+        <link rel="stylesheet" type="text/css" href="{% static 'golo.css' %}">
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../../../../AppData/Local/Temp/Rar$DRa0.861/jQueryLeftNav/js/jquery.js"></script>
+</head>
+<body>
+<script src="jquery-3.3.1.js"></script>
+<script>
+    function verification() {
+        if ($('#fbname').val() == '') {
+            alert('姓名不能为空!');
+            return false;
+        }
+        if ($('#cab').val() == '') {
+            alert('内容不能为空!');
+            return false;
+        }
+
+        $('#btton').click();
+
+
+    }
+
+</script>
+
+<nav class="csa" role="navigation" style="margin-bottom: 10px;height: 60px">
+    <div class="container-fluid" style="background: #53b3f3">
+        <div class="navbar-header">
+            <h2 style="color: white">设备查询系统</h2>
+        </div>
+        <div class="dao" style="float: right;padding: 10px;">
+            <a style="color: #FFFFFF" href="{% url 'adc:out' %}">退出</a>
+
+        </div>
+    </div>
+</nav>
+<div class="container-fluid ">
+    <div class="c" style="float:left;width: 13%">
+        <div class="account-l fl">
+            <a class="list-title" style="color: #0f0f0f">管理</a>
+
+            <ul id="accordion" class="accordion">
+                <li>
+                    <div class="link">设备管理<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                        <li id="shop"><a href="{% url 'adc:Channel' %}">波道</a></li>
+                        <li id="publicproducts"><a href="{% url 'adc:Cabview' %}">光缆</a></li>
+                        <li id="productlists"><a href="{% url 'adc:Fibe' %}">光纤</a></li>
+                        <li id="mysaled"><a href="{% url 'adc:Fibe' %}">波道路由</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+
+        </div>
+    </div>
+    <div style="background: #f5f5f5;float:right;width:87%">
+
+                    <div class="span4">
+
+
+                        <form class="form-inline pull-left" role="form" method="post" enctype="multipart/form-data"
+                              action="{% url 'adc:upCab' %}"
+                              accept-charset="utf-8">
+                            {% csrf_token %}
+
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">示例下载</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <a href="{% url 'adc:downCab' %}">光缆数据导入模版示例下载</a>
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">示例说明</h3>
+                                </div>
+                                <div class="panel-body">
+                                    数据快捷导入------------
+                                    <br>请注意文件是xlsx类型的文件并且文件名开头为光缆
+
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">文件选择</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <input type="file" class="btn-default" name="file">
+
+                                </div>
+                                <div class="panel-body">
+                                                       <span class="glyphicon glyphicon-cloud-upload"><input
+                                                               type="submit"
+                                                               class="btn-default"
+                                                               value="确定导入"></span>
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                              
+                                <div class="panel-body">
+                                    <input type="button" class="btn btn-default btn-sm" name="back" value="返回"
+                                           onclick="javascript:history.back(-1);"/>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+
+                            </div>
+
+
+                        </form>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <!--/span-->
+        </div><!--/row-->
+
+</div>
+</body>
+</html>

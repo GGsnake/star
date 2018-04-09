@@ -1,0 +1,59 @@
+{% extends "polls/admin-index.html" %}
+
+{% block main %}
+
+
+                        <form class="form-inline pull-left" role="form" method="post" enctype="multipart/form-data"
+                              action="{% url 'adc:upCab' %}"
+                              accept-charset="utf-8">
+                            {% csrf_token %}
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">示例下载</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <a href="{% url 'adc:downCab' %}">光缆数据导入模版示例下载</a>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">示例说明</h3>
+                                </div>
+                                <div class="panel-body">
+                                    数据快捷导入------------
+                                    <br>请注意文件是xlsx类型的文件并且文件名开头为光缆
+
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">文件选择</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <input type="file" class="btn-default" name="file">
+
+                                </div>
+                                <div class="panel-body">
+                                                       <span class="glyphicon glyphicon-cloud-upload"><input
+                                                               type="submit"
+                                                               class="btn-default"
+                                                               value="确定导入"></span>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                              
+                                <div class="panel-body">
+                                    <input type="button" class="btn btn-default btn-sm" name="back" value="返回"
+                                           onclick="javascript:history.back(-1);"/>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+
+                            </div>
+
+
+                        </form>
+
+          {%  endblock %}

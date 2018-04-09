@@ -1,0 +1,191 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<script src="{% static 'polls/jquery-3.3.1.js' %}"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+        <a class="float-right" href="#">登录</a>
+    </div>
+</nav>
+
+</div>
+<div class="navbar-nav">
+    <div class="col-lg-offset-3  col-xs-5 ro"
+         style="height: auto;background-image: url(https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1517152057&di=c5c8c4c5781aaef3287d945275ee58a2&src=http://pic.shejiben.com/caizhi/day_151020/20151020_f93f3de1f90090d391716LyVtvKdIvHW.jpg)">
+
+
+        <ul class="media-list">
+
+            {% for key in names %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            {{ key.name }}
+                        </h4>
+                    </div>
+                    <div class="panel-body ">
+                        <h3>{{ key.content }}</h3>
+
+                    </div>
+                    <div><a class="pull-left">
+                        <button id="{{ key.name }}" class="hided" value="false" type="button">评论</button>
+                    </a></div>
+                    <div class="{{ key.name }}" style="margin-left: 30px" id="1"></div>
+                </div>
+                {#                <li class="media">#}
+                {#                    <a class="media-left">#}
+                {#                        <img class="img-circle media-object" style="height: 55px;width: 55px"#}
+                {#                             src="http://{{ key.image }}"#}
+                {#                        >#}
+                {#                    </a>#}
+                {#                    <div class="media-body">#}
+                {#                        <div style="height: 21px"></div>#}
+                {#                        <h4 class="media-heading"></h4>#}
+                {##}
+                {#                        <div class="media">#}
+                {#                            <p class="media-left">#}
+                {#                            <h3> </h3>#}
+                {#                            </p>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {##}
+                {#                </li>#}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+</div>
+<div class="col-lg-offset-3  col-xs-5 ro"
+     style="height: auto;background-image: url(https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1517152057&di=c5c8c4c5781aaef3287d945275ee58a2&src=http://pic.shejiben.com/caizhi/day_151020/20151020_f93f3de1f90090d391716LyVtvKdIvHW.jpg)">
+    <ul class="media-list" id="content">
+
+
+    </ul>
+</div>
+<script>
+
+    $(document).ready(function () {
+        var range = 50;
+
+        var maxnum = 20;
+        var num = 1;
+        var totalheight = 0;
+        var main = $("#content");
+        var stop = true;
+         $(document).ready(function () {
+                                $(".hided").click(function () {
+                                    var val = $(this).attr("id");
+                                    var iff = $('.' + val).attr("id");
+                                    {#                $("." + val).toggle(1342);#}
+
+                                    if (iff == "2") {
+                                        $('.' + val).slideToggle("slow");
+                                        $('.' + val).empty()
+                                        $('.' + val).attr("id", "1");
+                                    }
+                                    else {
+
+                                        $.ajax({
+                                            url: "ajax_list/",
+                                            data: {idd: val},
+                                            success: function (data) {
+                                                jQuery.each(data, function (i, item) {
+
+                                                    $('.' + val).append("</br><div >" + "" + item.name + "" + "<h4>" + item.content + "</h4>" + "</div>")
+                                                    $('.' + val).attr("id", "2");
+                                                });
+
+
+                                            }
+
+                                        })
+                                    }
+                                });
+
+                            });
+
+        $(window).scroll(function () {
+            var srollPos = $(window).scrollTop();
+            totalheight = parseFloat($(window).height()) + parseFloat(srollPos);
+            if (($(document).height() - range) <= totalheight && num != maxnum) {
+                if (stop == true) {
+                    stop = false;
+                    $.ajax({
+                        url: "arr/",
+                        data: {idd: num},
+                        success: function (data) {
+                            jQuery.each(data, function (i, item) {
+                                main.append("<div class=\"panel panel-default\">\n" +
+                                    "   <div class=\"panel-heading\">\n" +
+                                    "      <h4 class=\"panel-title\">\n" +
+                                    item.name +
+                                    "      </h4>\n" +
+                                    "   </div>\n" +
+                                    "   <div class=\"panel-body\">\n" +
+                                    "<h3>" + item.content + "</h3>" +
+                                    "   </div>\n" +
+                                    "</div>" + "<div><a class=\"pull-left\">\n" +
+                                    "                            <button id=\"" + item.name + "\" class=\"hided\" value=\"false\" type=\"button\">评论</button>\n" +
+                                    "                        </a></div>" + " <div class=\"" + item.name + "\" style=\"margin-left: 30px\" id=\"1\">");
+
+                                stop = true;
+                            });
+
+
+                            $(document).ready(function () {
+                                $(".hided").click(function () {
+                                    var val = $(this).attr("id");
+                                    var iff = $('.' + val).attr("id");
+                                    {#                $("." + val).toggle(1342);#}
+
+                                    if (iff == "2") {
+                                        $('.' + val).slideToggle("slow");
+                                        $('.' + val).empty()
+                                        $('.' + val).attr("id", "1");
+                                    }
+                                    else {
+
+                                        $.ajax({
+                                            url: "ajax_list/",
+                                            data: {idd: val},
+                                            success: function (data) {
+                                                jQuery.each(data, function (i, item) {
+
+                                                    $('.' + val).append("</br><div >" + "" + item.name + "" + "<h4>" + item.content + "</h4>" + "</div>")
+                                                    $('.' + val).attr("id", "2");
+                                                });
+
+
+                                            }
+
+                                        })
+                                    }
+                                });
+
+                            });
+
+                        }
+
+                    })
+                    num = num + 1;
+
+                }
+
+
+            }
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+
+    <script>
+        var page = 1;
+        var toall = 0;
+        var pagesize = 10;
+
+        function deletee(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "chdeletfirbe/",
+                        data: {id: id},
+                        success: function (data) {
+
+                            alert("删除成功")
+                            $('#' + id).empty()
+                            window.location.reload()
+                        }
+
+                    })
+
+
+            });
+
+
+        };
+
+        function Load() {
+            if ($("#protect").val() != "") {
+                var protect = $("#protect").val();
+            }
+            if ($("#number").val() != "") {
+                var number = $("#number").val();
+            }
+            if ($("#to").val() != "") {
+                var to = $("#to").val();
+            }
+            if ($("#cab").val() != "") {
+                var cab = $("#cab").val();
+            }
+            if ($("#pagesize").val() != "") {
+                var pagesize = $("#pagesize").val();
+            }
+            $.ajax({
+                url: "QureyCab/",
+                data: {cab: cab, to: to, number: number, protect: protect, page: page, pagesize: pagesize},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data, function (i, item) {
+                        if (i != 0) {
+                            $('#tabb').append(" <tr id=\"" + item.Cablename + "\">\n" +
+                                "                        <th>" + "<a href='CaShow?id=" + item.Cablename + "'>" + item.Cablename + "</a>" + "</th>\n" +
+                                "                        <th>" + item.Apoint + "</th>\n" +
+                                "                        <th>" + item.Bpoint + "</th>\n" +
+                                "                        <th>" + item.Sup + "</th>\n" +
+                                "                        <th>" + item.MainMan + "</th>\n" +
+                                "                        <th>" + item.Corenumber + "</th>\n" +
+                                "                        <th>" + item.To + "</th>\n" +
+                                "                        <th>" + item.ProtectMan + "</th>\n" +
+
+                                {#                                "                        <th>" + " <button type=\"button\"         style=\"color: white;background-color: deepskyblue\"     name=\"" + item.Cablename + "\"\n" +#}
+                                {#                                "                                            class=\"btn btn-default btn-sm\">修改" +#}
+                                {#                                "                                    </button>"#}
+                                {#                                + "  <button type=\"button\"   style=\"background-color: #ea1328;color: white\"  onclick=\"deleteef(this)\" name=\"" + item.Cablename + "\" class=\"btn btn-default btn-sm\">删除</button>\n"#}
+                                {#                                +#}
+                                {##}
+                                {#                                "                        </button>" #}
+                                {#                                + "</th>\n" +#}
+
+                                "                    </tr>" + "div"
+                            )
+                        }
+                        else {
+                            toall = item.map;
+                            $("#toall").text("总共" + toall + "页");
+                            $('#tabb').append(" <tr id=\"" + item.Cablename + "\">\n" +
+                                "                        <th>" + "<a href='CaShow?id=" + item.Cablename + "'>" + item.Cablename + "</a>" + "</th>\n" +
+                                "                        <th>" + item.Apoint + "</th>\n" +
+                                "                        <th>" + item.Bpoint + "</th>\n" +
+                                "                        <th>" + item.Sup + "</th>\n" +
+                                "                        <th>" + item.MainMan + "</th>\n" +
+                                "                        <th>" + item.Corenumber + "</th>\n" +
+                                "                        <th>" + item.To + "</th>\n" +
+                                "                        <th>" + item.ProtectMan + "</th>\n" +
+                                {#                                "                        <th>" + " <button type=\"button\" name=\"" + item.Cablename + "\"\n" +#}
+                                {#                                "                                          style=\"color: white;background-color: deepskyblue\"        class=\"btn btn-default btn-sm\">修改" +#}
+                                {#                                "                                    </button>"#}
+                                {#                                +#}
+                                {#                                "  <button type=\"button\" style=\"background-color: #ea1328;color: white\"  onclick=\"deleteef(this)\" name=\"" + item.Cablename + "\" class=\"btn btn-default btn-sm\">删除</button>\n"#}
+                                {#                                +#}
+                                {##}
+                                {#                                "                        </button>" #}
+                                {#                                + "</th>\n" +#}
+
+                                "                    </tr>" + "div"
+                            )
+                        }
+
+
+                    });
+
+
+                }
+            })
+
+
+        }
+
+        function Loac() {
+            var protect = $.cookie('ptt');
+            var to = $.cookie('to');
+            var cab = $.cookie('cb')
+            var number = $.cookie('number')
+            if (protect && protect != 0 && protect != "null") {
+                $("#protect").val($.cookie('ptt'));
+            }
+            if (cab && cab != 0 && cab != "null") {
+                $("#cab").val($.cookie('cb'));
+            }
+
+            if (to && to != 0 && to != "null") {
+                $("#to").val($.cookie('to'));
+            }
+            if (number && number != 0 && number != "null") {
+                $("#number").val($.cookie('number'));
+            }
+
+            if ($("#protect").val() != "") {
+                var protect = $("#protect").val();
+            }
+            if ($("#number").val() != "") {
+                var number = $("#number").val();
+            }
+            if ($("#to").val() != "") {
+                var to = $("#to").val();
+            }
+            if ($("#cab").val() != "") {
+                var cab = $("#cab").val();
+            }
+            if ($("#pagesize").val() != "") {
+                var pagesize = $("#pagesize").val();
+            }
+            {# 记录初始化的显示数 #}
+            var ise = $.cookie('pagesize')
+            if (ise == null) {
+                pagesize = 10;
+                $("#pagesize").val("10");
+            }
+            else {
+                pagesize = ise;
+                $("#pagesize").val(ise);
+            }
+
+            var pag = $.cookie('cdd')
+            if (pag == null) {
+                page = 1;
+                $("#cdd").text("当前是第" + page + "页");
+
+            }
+            else {
+                page = parseInt(pag);
+                $("#cdd").text("当前是第" + page + "页");
+            }
+            $.ajax({
+                url: "QureyCab/",
+                data: {cab: cab, to: to, number: number, protect: protect, page: page, pagesize: pagesize},
+                success: function (data) {
+                    jQuery.each(data, function (i, item) {
+                        if (item.Cablename == "未找到") {
+
+                            $('#tabb').append(" <tr id=\"" + "" + "\">\n" +
+                                "                        <th>" + "<a href='CaShow?id=" + "" + "'>" + "" + "</a>" + "</th>\n" +
+                                "                        <th>" + "" + "</th>\n" +
+                                "                        <th>" + "" + "</th>\n" +
+                                "                        <th>" + "" + "</th>\n" +
+                                "                        <th>" + "" + "</th>\n" +
+                                "                        <th>" + "" + "</th>\n" +
+
+                                "                        <th>" + "" + "</th>\n" +
+                                "                        <th>" + "" + "</th>\n" +
+                                {##}
+                                {#                                    "                        <th>" + " <button type=\"button\" name=\"" + item.Cablename + "\"\n" +#}
+                                {#                                    "                                            class=\"btn btn-default btn-sm\"><a\n" +#}
+                                {#                                    "                                            href='chupdate?id=" + item.Cablename + "'>修改</a>\n" +#}
+                                {#                                    "                                    </button>" + "  <button type=\"button\"  onclick=\"deleteef(this)\" name=\"" + item.Cablename + "\" class=\"btn btn-default btn-sm\">删除</button>\n"#}
+                                {#                                    +#}
+                                {##}
+                                {#                                    "                        </button>" + "</th>\n" +#}
+
+                                "                    </tr>"
+                            )
+
+                        }
+                        else {
+                            if (i != 0) {
+                                $('#tabb').append(" <tr id=\"" + item.Cablename + "\">\n" +
+                                    "                        <th>" + "<a href='CaShow?id=" + item.Cablename + "'>" + item.Cablename + "</a>" + "</th>\n" +
+                                    "                        <th>" + item.Apoint + "</th>\n" +
+                                    "                        <th>" + item.Bpoint + "</th>\n" +
+                                    "                        <th>" + item.Sup + "</th>\n" +
+                                    "                        <th>" + item.MainMan + "</th>\n" +
+                                    "                        <th>" + item.Corenumber + "</th>\n" +
+                                    "                        <th>" + item.To + "</th>\n" +
+                                    "                        <th>" + item.ProtectMan + "</th>\n" +
+                                    {#                                    "                        <th>" +#}
+                                    {#                                    " <button type=\"button\" name=\"" + item.Cablename + "\"\n" +#}
+                                    {#                                    "                                  style=\"color: white;background-color: deepskyblue\"             class=\"btn btn-default btn-sm\">修改" +#}
+                                    {#                                    "                                    </button>"#}
+                                    {#                                    +#}
+                                    {#                                    "  <button type=\"button\"  onclick=\"deleteef(this)\" name=\"" + item.Cablename + "\" class=\"btn btn-default btn-sm\">删除</button>\n"#}
+                                    {#                                    +#}
+                                    {##}
+                                    {#                                    "                        </button>" #}
+                                    {#                                    +#}
+                                    {#                                    "</th>\n" +#}
+
+                                    "                    </tr>" + "div"
+                                )
+                            }
+                            else {
+                                toall = item.map;
+                                $("#toall").text("总共" + toall + "页");
+
+                                $('#tabb').append(" <tr id=\"" + item.Cablename + "\">\n" +
+                                    "                        <th>" + "<a href='CaShow?id=" + item.Cablename + "'>" + item.Cablename + "</a>" + "</th>\n" +
+                                    "                        <th>" + item.Apoint + "</th>\n" +
+                                    "                        <th>" + item.Bpoint + "</th>\n" +
+                                    "                        <th>" + item.Sup + "</th>\n" +
+                                    "                        <th>" + item.MainMan + "</th>\n" +
+                                    "                        <th>" + item.Corenumber + "</th>\n" +
+                                    "                        <th>" + item.To + "</th>\n" +
+                                    "                        <th>" + item.ProtectMan + "</th>\n" +
+
+                                    {#                                    "                        <th>" + " <button type=\"button\" name=\"" + item.Cablename + "\"\n" +#}
+                                    {#                                    "                                  style=\"color: white;background-color: deepskyblue\"             class=\"btn btn-default btn-sm\">修改" +#}
+                                    {#                                    "                                    </button>"#}
+                                    {#                                    +#}
+                                    {#                                    "  <button type=\"button\"  onclick=\"deleteef(this)\" name=\"" + item.Cablename + "\" class=\"btn btn-default btn-sm\">删除</button>\n"#}
+                                    {#                                    +#}
+                                    {##}
+                                    {#                                    "                        </button>"#}
+                                    {#                                    + "</th>\n" +#}
+
+                                    "                    </tr>" + "div"
+                                )
+                            }
+
+                        }
+
+
+                    });
+
+
+                }
+            })
+
+
+        }
+
+        function deleteef(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "chdeletfirbe/",
+                        data: {id: id},
+                        success: function (data) {
+
+                            alert("删除成功")
+                            $('#' + id).empty()
+
+                        }
+
+                    })
+
+
+            });
+
+
+        };
+        $(document).ready(function () {
+            Loac();
+            $("#pagesize").change(function () {
+                $('#quee').click();
+
+            });
+            $("#prev").click(function () {
+                if (page > 1) {
+                    page = page - 1;
+                    Load(); //加载数据
+                    $.cookie('cdd', page, {expires: 30})
+                    $("#cdd").text("当前是第" + page + "页");
+                }
+
+            });
+
+
+            //给下一页加点击事件
+
+            $("#next").click(function () {
+                if (page < toall) {
+                    page = page + 1;
+                    Load(); //加载数据
+                    $.cookie('cdd', page, {expires: 30})
+                    $("#cdd").text("当前是第" + page + "页");
+
+                }
+
+            });
+            var pagesize;
+            $("#clear").click(function () {
+                $.cookie('cb', null);
+                $.cookie('ptt', null);
+                $.cookie('to', null);
+                $.cookie('number', null);
+                $.cookie('cdd', null);
+                $("#cab").val("");
+                $("#protect").val("");
+                $("#to").val("");
+                $("#number").val("");
+                $("#quee").click();
+            });
+
+            $("#quee").click(function () {
+                $.cookie('cb', $("#cab").val(), {expires: 30});
+                $.cookie('ptt', $("#protect").val(), {expires: 30});
+                $.cookie('to', $("#to").val(), {expires: 30});
+                $.cookie('number', $("#number").val(), {expires: 30});
+                $.cookie('cdd', 1, {expires: 30});
+                $.cookie('pagesize', $("#pagesize").val(), {expires: 30});
+                if ($("#protect").val() != "") {
+                    var protect = $("#protect").val();
+                }
+                if ($("#number").val() != "") {
+                    var number = $("#number").val();
+                }
+                if ($("#to").val() != "") {
+                    var to = $("#to").val();
+                }
+                if ($("#cab").val() != "") {
+                    var cab = $("#cab").val();
+                }
+                if ($("#pagesize").val() != "") {
+                    pagesize = $("#pagesize").val();
+                }
+                page=1;
+                toall = 0;
+                $("#cdd").text("当前是第" + page + "页");
+
+                $.ajax({
+                    url: "QureyCab/",
+
+                    data: {cab: cab, to: to, page: page, number: number, protect: protect, pagesize: pagesize},
+                    success: function (data) {
+                        $('#tabb').empty()
+                        jQuery.each(data, function (i, item) {
+                                if (item.Cablename == "未找到") {
+
+                                    $('#tabb').append(" <tr id=\"" + "" + "\">\n" +
+                                        "                        <th>" + "<a href='CaShow?id=" + "" + "'>" + "" + "</a>" + "</th>\n" +
+                                        "                        <th>" + "" + "</th>\n" +
+                                        "                        <th>" + "" + "</th>\n" +
+                                        "                        <th>" + "" + "</th>\n" +
+                                        "                        <th>" + "" + "</th>\n" +
+                                        "                        <th>" + "" + "</th>\n" +
+
+                                        "                        <th>" + "" + "</th>\n" +
+                                        "                        <th>" + "" + "</th>\n" +
+                                        {##}
+                                        {#                                    "                        <th>" + " <button type=\"button\" name=\"" + item.Cablename + "\"\n" +#}
+                                        {#                                    "                                            class=\"btn btn-default btn-sm\"><a\n" +#}
+                                        {#                                    "                                            href='chupdate?id=" + item.Cablename + "'>修改</a>\n" +#}
+                                        {#                                    "                                    </button>" + "  <button type=\"button\"  onclick=\"deleteef(this)\" name=\"" + item.Cablename + "\" class=\"btn btn-default btn-sm\">删除</button>\n"#}
+                                        {#                                    +#}
+                                        {##}
+                                        {#                                    "                        </button>" + "</th>\n" +#}
+
+                                        "                    </tr>"
+                                    )
+
+                                }
+                                else {
+                                    if (i != 0) {
+
+                                        $('#tabb').append(" <tr id=\"" + item.Cablename + "\">\n" +
+                                            "                        <th>" + "<a href='CaShow?id=" + item.Cablename + "'>" + item.Cablename + "</a>" + "</th>\n" +
+                                            "                        <th>" + item.Apoint + "</th>\n" +
+                                            "                        <th>" + item.Bpoint + "</th>\n" +
+                                            "                        <th>" + item.Sup + "</th>\n" +
+                                            "                        <th>" + item.MainMan + "</th>\n" +
+                                            "                        <th>" + item.Corenumber + "</th>\n" +
+
+                                            "                        <th>" + item.To + "</th>\n" +
+                                            "                        <th>" + item.ProtectMan + "</th>\n" +
+
+                                            {#                                            "                        <th>" + " <button type=\"button\" name=\"" + item.Cablename + "\"\n" +#}
+                                            {#                                            "                                         style=\"color: white;background-color: deepskyblue\"      class=\"btn btn-default btn-sm\">修改" +#}
+                                            {#                                            "                                    </button>"#}
+                                            {#                                            + "  <button type=\"button\"  style=\"background-color: #ea1328;color: white\"  onclick=\"deleteef(this)\" name=\"" + item.Cablename + "\" class=\"btn btn-default btn-sm\">删除</button>\n"#}
+                                            {#                                            +#}
+                                            {##}
+                                            {#                                            "                        </button>" #}
+                                            {#                                            + "</th>\n" +#}
+
+                                            "                    </tr>"
+                                        )
+                                    }
+                                    else {
+                                        $("#toall").text("总共" + item.map + "页");
+                                        toall = item.map;
+                                        $('#tabb').append(" <tr id=\"" + item.Cablename + "\">\n" +
+                                            "                        <th>" + "<a href='CaShow?id=" + item.Cablename + "'>" + item.Cablename + "</a>" + "</th>\n" +
+                                            "                        <th>" + item.Apoint + "</th>\n" +
+                                            "                        <th>" + item.Bpoint + "</th>\n" +
+                                            "                        <th>" + item.Sup + "</th>\n" +
+                                            "                        <th>" + item.MainMan + "</th>\n" +
+                                            "                        <th>" + item.Corenumber + "</th>\n" +
+
+                                            "                        <th>" + item.To + "</th>\n" +
+                                            "                        <th>" + item.ProtectMan + "</th>\n" +
+                                            {#                                            "                        <th>" + " <button type=\"button\" name=\"" + item.Cablename + "\"\n" +#}
+                                            {#                                            "                                      style=\"color: white;background-color: deepskyblue\"           class=\"btn btn-default btn-sm\">修改  </button>" +#}
+                                            {#                                            "  <button type=\"button\"  style=\"background-color: #ea1328;color: white\"  onclick=\"deleteef(this)\" name=\"" + item.Cablename + "\" class=\"btn btn-default btn-sm\">删除</button>\n"#}
+                                            {#                                            +#}
+                                            {##}
+                                            {#                                            "                        </button>" + #}
+                                            {#                                            "</th>\n" +#}
+
+                                            "                    </tr>"
+                                        )
+
+                                    }
+                                }
+
+
+                            }
+                        );
+
+                    }
+
+                })
+
+            });
+        });
+    </script>
+{% endblock %}
+{% block main %}
+    <div style="float: left">
+        <div style="float:left;width: 222px ;padding: 10px">光缆编号<input type="text" name="cab" id="cab"
+                                                                       class="form-control"
+        >
+        </div>
+        <div style="float:left;width: 70px ;padding: 10px"> 芯数<input type="text" name="number" id="number"
+                                                                     class="form-control">
+        </div>
+
+        <div style="float:left;width: 130px ;padding: 10px"> 维护人<input type="text" name="protect" id="protect"
+                                                                       class="form-control"
+        >
+        </div>
+        <div style="float:left;width: 130px ;padding: 10px">归属地<input type="text" name="to" id="to"
+                                                                      class="form-control"
+        >
+
+        </div>
+        <div style="float:left;width: 72px;padding: 10px "><br/>
+            <button type="submit" id="quee" class="btn btn-default" style="background-color: #3e8f3e;color: white">查询
+            </button>
+        </div>
+        <div style="float:left;width: 72px;padding: 10px "><br/>
+            <button type="submit" id="clear" class="btn btn-default" style="background-color: #ea1328;color: white">
+                清空条件
+            </button>
+        </div>
+        <div style="float:left;width: 88px ;margin-left: 39px;padding: 10px">显示数<select id="pagesize" name="pagesize">
+            <option selected="selected" value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+        </select>
+        </div>
+    </div>
+    <div>
+    </div>
+    <div class="panel-body">
+    </div>
+    {#    <button style=" margin-left: 7px;background-color: #00afee;color: #ffffff" onclick="window.location.href='Chadd'"#}
+    {#            type="button" class="am-btn am-btn-default"><span class="glyphicon glyphicon-plus"></span> 新增#}
+    {#    </button>#}
+                        {% if request.user.is_superuser %}
+
+    <button style="margin-left: 7px;background-color: #00afee;color: #ffffff" onclick="window.location.href='cabload'"
+            type="button" class="btn btn-default btn-sm"> 数据导入
+    </button>
+    {% endif %}
+    <button style="margin-left: 7px;background-color: #00ff8f;color: #313335" onclick="window.location.href='cadao'"
+            type="button" class="btn btn-default btn-sm"> 数据导出
+    </button>
+    <table id="xs" style="margin-left: 7px;width: 810px;font-size: 13px" class="table table-bordered table-hover">
+        <caption>光缆信息</caption>
+        <thead>
+        <tr id="s">
+            <th width="11%"> 光缆编号</th>
+            <th width="10%">A端</th>
+            <th width="10%">B端</th>
+            <th width="9%">供应商</th>
+            <th width="8%">主负责人</th>
+            <th width="5%">芯数</th>
+            <th width="7%">所在地</th>
+            <th width="15%">维护人</th>
+        </tr>
+        </thead>
+        <tbody id="tabb" style="width: 810px;" >
+        </tbody>
+    </table>
+    <div class="pagination" id="pge" style="margin-left: 7px">
+     <span class="step-links">
+           <input id="prev" type="button" class="btn btn-default btn-sm" value="上一页">
+        <span class="current" id="cdd">
+            当前第1页
+        </span>
+          <input id="next" class=" btn btn-default btn-sm" type="button" value="下一页">
+    <span class="cc" id="toall">
+            总共
+        </span>
+    </span>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

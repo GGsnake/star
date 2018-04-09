@@ -1,0 +1,401 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        var valus;
+        var page = 1;
+        var toall = 0;
+
+        function blank() {
+            $('#tabb').append(" <tr id=\"" + "" + "\">\n" +
+                "                        <th>" + "<a href='Show?id=" + "" + "'>" + "" + "</a>" + "</th>\n" +
+                "                        <th>" + "" + "</th>\n" +
+                "                        <th>" + "" + "</th>\n" +
+                "                        <th>" + "" + "</th>\n" +
+                "                        <th>" +
+                "                    </tr>"
+            )
+        }
+        function onload(item) {
+            {% if request.user.is_superuser %}
+                $('#tabb').append(" <tr id=\"" + item.FibreName + "\">\n" +
+                    "                        <th>" + "<a href='Show?id=" + item.FibreName + "'>" + item.FibreName + "</a>" + "</th>\n" +
+                    "                        <th>" + item.Cable + "</th>\n" +
+                    "                        <th>" + item.MainMan + "</th>\n" +
+                    "                        <th>" + item.StartData + "</th>\n" +
+                    "                        <th>" + " <button type=\"button\"  onclick=\"window.location.href='update?id=" + item.FibreName + "'\" name=\"" + item.FibreName + "\"\n" +
+                    "                                 style=\"color: white;background-color: deepskyblue\"           class=\"btn btn-default btn-sm\">修改" +
+                    "                                    </button>" +
+                    "  <button type=\"button\" style=\"background-color: #ea1328;color: white\" onclick=\"deleteef(this)\" name=\""+item.FibreName+"\" class=\"btn btn-default btn-sm\">删除</button>\n"
+                    + "</th>\n" +
+                    "                    </tr>")
+
+            {% else %}
+                $('#tabb').append(" <tr id=\"" + item.FibreName + "\">\n" +
+                    "                        <th>" + "<a href='Show?id=" + item.FibreName + "'>" + item.FibreName + "</a>" + "</th>\n" +
+                    "                        <th>" + item.Cable + "</th>\n" +
+                    "                        <th>" + item.MainMan + "</th>\n" +
+                    "                        <th>" + item.StartData + "</th>\n" +
+                    "                        <th>" + " <button type=\"button\" disabled=\"disabled\"  onclick=\"window.location.href='update?id=" + item.FibreName + "'\" name=\"" + item.FibreName + "\"\n" +
+                    "                                 style=\"color: white;background-color: deepskyblue\"           class=\"btn btn-default btn-sm\">修改" +
+                    "                                    </button>" +
+                    "  <button type=\"button\" disabled=\"disabled\" style=\"background-color: #ea1328;color: white\" onclick=\"deleteef(this)\" name=\"det\" class=\"btn btn-default btn-sm\">删除</button>\n"
+                    + "</th>\n" +
+                    "                    </tr>")
+            {% endif %}
+        }
+
+        function deletee(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "deletfirbe/",
+                        data: {id: id},
+                        success: function (data) {
+
+                            alert("删除成功")
+                            $('#' + id).empty()
+                            window.location.reload()
+                        }
+                    })
+            });
+        };
+
+        function deleteef(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "deletfirbe/",
+                        data: {id: id},
+                        success: function (data) {
+                            alert("删除成功")
+                            Loac();
+                            $('#' + id).empty()
+                        }
+                    })
+            });
+        };
+
+        function Load() {
+            if ($("#protect").val() != "") {
+                var pro = $("#protect").val();
+            }
+            if ($("#firenumber").val() != "") {
+                var fis = $("#firenumber").val();
+            }
+            if ($("#cab").val() != "") {
+                var cab = $("#cab").val();
+            }
+            if ($("#pagesize").val() != "") {
+                var pagesize = $("#pagesize").val();
+            }
+            $.ajax({
+                url: "Queryfirbe/",
+                data: {firenumber: fis, protect: pro, cab: cab, page: page, state: valus, pagesize: pagesize},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data, function (i, item) {
+                        if (item.FibreName == "未找到") {
+                            blank();
+                        }
+                        else {
+                            if (i != 0) {
+                                onload(item);
+                            }
+                            else {
+                                toall = item.map;
+                                $("#toall").text("总共" + toall + "页");
+                                onload(item);
+                            }
+                        }
+                    });
+                }
+            })
+        }
+
+        var pagesize = 10;
+
+        function Loac() {
+            var protect = $.cookie('weihu');
+            var fis = $.cookie('fid');
+            var cab = $.cookie('cccb')
+            if (protect && protect != 0 && protect != "null") {
+                $("#protect").val($.cookie('weihu'));
+            }
+            if (cab && cab != 0 && cab != "null") {
+                $("#cab").val($.cookie('cccb'));
+            }
+            if (fis && fis != 0 && fis != "null") {
+                $("#firenumber").val($.cookie('fid'));
+            }
+            if ($("#protect").val() != "") {
+                var pro = $("#protect").val();
+            }
+            if ($("#firenumber").val() != "") {
+                var fis = $("#firenumber").val();
+            }
+            if ($("#cab").val() != "") {
+                cab = $("#cab").val();
+            }
+            if ($("#pagesize").val() != "") {
+                var pagesize = $("#pagesize").val();
+            }
+            {# 记录初始化的显示数 #}
+            var ise = $.cookie('pagesi')
+            if (ise == null) {
+                pagesize = 10;
+                $("#pagesize").val("10");
+            }
+            else {
+                pagesize = ise;
+                $("#pagesize").val(ise);
+            }
+            var pag = $.cookie('pageid')
+            if (pag == null) {
+                page = 1;
+                $("#pageid").text("当前是第" + page + "页");
+            }
+            else {
+                page = parseInt(pag);
+                $("#pageid").text("当前是第" + page + "页");
+            }
+            $.ajax({
+                url: "Queryfirbe/",
+                data: {firenumber: fis, protect: pro, cab: cab, page: page, state: valus, pagesize: pagesize},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data, function (i, item) {
+                        if (item.FibreName == "未找到") {
+                            blank();
+                        }
+                        else {
+                            if (i != 0) {
+                                onload(item);
+                            }
+                            else {
+                                toall = item.map;
+                                $("#toall").text("总共" + toall + "页");
+                                onload(item);
+
+                            }
+                        }
+                    });
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            Loac();
+            $("#pagesize").change(function () {
+
+                $('#quee').click();
+            });
+            $("#prev").click(function () {
+                if (page > 1) {
+                    page = page - 1;
+                    Load(); //加载数据
+                    $.cookie('pageid', page, {expires: 30})
+                    $("#pageid").text("当前是第" + page + "页");
+                }
+            });
+            //给下一页加点击事件
+            gvChartInit();
+            $('#myTable5').gvChart({
+                chartType: 'PieChart',
+                gvSettings: {
+                    vAxis: {title: 'No of players'},
+                    hAxis: {title: 'Month'},
+                    width: 480,
+                    height: 350
+                }
+            });
+            $("#next").click(function () {
+                if (page < toall) {
+                    page = page + 1;
+                    Load(); //加载数据
+                    $.cookie('pageid', page, {expires: 30})
+                    $("#pageid").text("当前是第" + page + "页");
+                    ;
+
+                }
+            });
+            var pagesize;
+            $("#clear").click(function () {
+                $.cookie('weihu', null);
+                $.cookie('pageid', null);
+                $.cookie('cccb', null);
+                $.cookie('fid', null);
+                $.cookie('pagesi', null);
+                $("#protect").val("");
+                $("#firenumber").val("");
+                $("#cab").val("");
+                $("#quee").click();
+            });
+            $("#quee").click(function () {
+                $.cookie('pageid', 1, {expires: 30});
+                $.cookie('weihu', $("#protect").val(), {expires: 30});
+                $.cookie('fid', $("#firenumber").val(), {expires: 30});
+                $.cookie('cccb', $("#cab").val(), {expires: 30});
+                $.cookie('pagesi', $("#pagesize").val(), {expires: 30});
+                toall = 0;
+                if ($("#protect").val() != "") {
+                    var pro = $("#protect").val();
+                }
+                if ($("#firenumber").val() != "") {
+                    var fis = $("#firenumber").val();
+                }
+                if ($("#cab").val() != "") {
+                    var cab = $("#cab").val();
+                }
+                if ($("#pagesize").val() != "") {
+                    pagesize = $("#pagesize").val();
+                }
+                page = 1;
+                $("#pageid").text("当前是第" + page + "页");
+                $.ajax({
+                    url: "Queryfirbe/",
+                    data: {firenumber: fis, protect: pro, cab: cab, page: page, state: valus, pagesize: pagesize},
+                    success: function (data) {
+                        $('#tabb').empty()
+                        jQuery.each(data, function (i, item) {
+                            if (item.FibreName == "未找到") {
+                                blank();
+                            }
+                            else {
+                                if (i != 0) {
+                                    onload(item);
+                                }
+                                else {
+
+                                    $("#toall").text("总共" + item.map + "页");
+                                    toall = item.map;
+                                    onload(item);
+
+                                }
+                            }
+                        });
+
+
+                    }
+                })
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="contnet" style="float: left;max-width: 1080px">
+        <div style="float: left">
+            <div style="float:left;width: 222px ;padding: 10px"> 光纤编号<input type="text" name="firenumber"
+                                                                            id="firenumber"
+                                                                            class="form-control">
+            </div>
+
+            <div style="float:left;width: 222px ;padding: 10px"> 光缆编号<input type="text" name="cab" id="cab"
+                                                                            class="form-control"
+            >
+            </div>
+            <div style="float:left;width: 90px ;padding: 10px">维护人<input type="text" name="protect" id="protect"
+                                                                         class="form-control"
+            >
+            </div>
+            <div style="float:left;width: 72px;padding: 10px "><br/>
+                <button type="submit" id="quee" class="btn btn-default" style="background-color: #3e8f3e;color: white">
+                    查询
+                </button>
+            </div>
+            <div style="float:left;width: 72px;padding: 10px "><br/>
+                <button type="submit" id="clear" class="btn btn-default" style="background-color: #ea1328;color: white">
+                    清空条件
+                </button>
+
+            </div>
+
+            <div style="float:left;width: 88px ;margin-left: 39px;padding: 10px">显示数
+                <select onselect="onload()" id="pagesize" name="pagesize">
+                    <option value="5">5</option>
+                    <option selected="selected" value="10">10</option>
+                    <option value="15">15</option>
+                </select>
+            </div>
+            {#        <div style="float:left;width: 72px;padding: 10px "><br/>#}
+            {#            <button type="submit" id="clear" class="btn btn-default">清空搜索条件</button>#}
+            {#        </div>#}
+        </div>
+        <div>
+
+        </div>
+        <div class="panel-body">
+
+        </div>
+        {#    <button style=" margin-left: 7px;background-color: #00afee;color: #ffffff" onclick="window.location.href='add'"#}
+        {#            type="button" class="am-btn am-btn-default"><span class="glyphicon glyphicon-plus"></span> 新增#}
+        {#    </button>#}
+                    {% if request.user.is_superuser %}
+
+        <button style=" margin-left: 7px;background-color: #00afee;color: #ffffff"
+                onclick="window.location.href='loadd'"
+                type="button" class="btn btn-default btn-sm"> 数据导入
+        </button>
+        {% endif %}
+        <button style=" margin-left: 7px;background-color: #00ff8f;color: #313335"
+
+                onclick="window.location.href='Fiechu'"
+                type="button" class="btn btn-default btn-sm"> 数据导出
+        </button>
+        <table id="xs" style="margin-left: 7px;margin-right: 8px;min-width: 700px;max-width: 800px;font-size: 13px"
+               class="table table-bordered table-hover">
+            <thead>
+            <tr id="s">
+                <th width="20%">光纤编号</th>
+                <th width="20%">所属光缆</th>
+
+                <th width="15%">维护人</th>
+                <th width="15%">分配时间</th>
+                <th width="15%">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tabb">
+            </tbody>
+        </table>
+        <div class="pagination" id="pge" style="margin-left: 7px">
+     <span class="step-links">
+           <input id="prev" type="button" class="btn btn-default btn-sm" value="上一页">
+        <span class="current" id="pageid">
+            当前第1页
+        </span>
+          <input id="next" class=" btn btn-default btn-sm" type="button" value="下一页">
+    <span class="cc" id="toall">
+            总共
+        </span>
+    </span>
+        </div>
+    </div>
+    <div class="right" style="float: right;max-width: 400px">
+        <table id='myTable5'>
+            <caption>光纤总数 : {{ size }}</caption>
+            <thead>
+            <tr>
+                <th>总数</th>
+                <th>已使用</th>
+                <th>未分配</th>
+                <th>故障</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>{{ size }}</th>
+                <td>{{ ok }}</td>
+                <td>{{ nook }}</td>
+                <td>{{ eoor }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

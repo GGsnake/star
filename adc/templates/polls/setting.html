@@ -1,0 +1,74 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $("#quee").click(function () {
+                if ($("#newpassword").val()=="")
+                {
+                    alert("请输入新密码");
+                }   if ($("#oldpassword").val()=="")
+                {
+                    alert("请输入旧密码");
+                }
+                if ($("#newpassword2").val()=="")
+                {
+                    alert("请输入重复新密码");
+                }
+
+                if ($("#oldpassword").val() != "" && $("#newpassword").val() != ""&& $("#newpassword2").val() != "") {
+
+                    var username = $("#username").val();
+                    var newpassword = $("#newpassword").val();
+                    var oldpassword = $("#oldpassword").val();
+                    var newpassword2 = $("#newpassword2").val();
+                    if(newpassword!=newpassword2)
+                    {
+                        alert("二次新密码输入不对");
+                    }
+                    else {
+                      $.ajax({
+                        url: "passwordupdate/",
+                        data: {username: username, oldpassword: oldpassword, newpassword: newpassword, newpassword2: newpassword2},
+                        success: function (data) {
+                            if (data.yes == "修改成功") {
+                                alert(data.yes);
+                                window.location.href = "setting"
+                            }
+                            else {
+                                alert(data.yes);
+                            }
+                        }
+                    })
+
+                    }
+
+                }
+            });
+        });
+
+    </script>
+{% endblock %}
+{% block main %}
+    <div class="span4" style="margin-left:3%;margin-top: 2%">
+        <div class="username">
+            用户名&nbsp
+            <input  type="text" name="username" id="username" readonly="readonly" value="{{ name }}" class="form-control" style="max-width: 200px">
+        </div><div class="username">
+          旧密码&nbsp&nbsp：
+            <input  type="password" name="oldpassword" id="oldpassword" class="form-control" style="max-width: 200px">
+        </div><div class="username">
+           新密码&nbsp&nbsp
+            <input  type="password" name="newpassword" id="newpassword"  class="form-control" style="max-width: 200px">
+        </div><div class="username">
+           重复新密码
+            <input  type="password" name="newpassword2" id="newpassword2"  class="form-control" style="max-width: 200px">
+        </div>
+        <button id="quee" class="btn btn-default btn-sm">提交</button>
+        <button type="button" name="back" value="返回"
+                                           onclick="window.location.href='Uses'"
+
+                class="btn btn-default btn-sm">返回
+        </button>
+    </div>
+
+{% endblock %}

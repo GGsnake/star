@@ -1,0 +1,54 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $("#sumbe").click(function () {
+                if ($("#username").val() != "" && $("#password").val() != "") {
+                    var username = $("#username").val();
+                    var password = $("#password").val();
+                   var  admin=$("input[type='checkbox']").is(':checked');
+                    $.ajax({
+                        url: "newuser/",
+                        data: {username: username, password: password,admin:admin},
+                        success: function (data) {
+                            window.location.href = "Uses"
+                        }
+                    })
+
+                }
+                else {
+                    alert("用户名或者密码未填写")
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block main %}
+    <div class="span4" style="margin-left:3%;margin-top: 2%">
+        <div >
+            <h3 id="uun">用户名：</h3>
+            <input type="text" name="username" id="username"  class="form-control" style="max-width: 200px;padding:0px">
+             <h3 id="username" >密码&nbsp&nbsp&nbsp：</h3>
+            <input type="password" name="password" id="password" style="max-width: 200px;;padding:0px"  class="form-control">
+        </div>
+        <div>
+
+        </div>
+
+        <div class="uunnn">
+            <label for="pasasdasdsword">是否管理员：</label>
+            <input type="checkbox" name="admin" id="admin" >
+        </div>
+        <div >
+         <button id="sumbe"  class="btn btn-default btn-sm">提交</button>
+        <button type="button" name="back" value="返回"
+           onclick="window.location.href='Uses'"
+                class="btn btn-default btn-sm">返回
+        </button>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}

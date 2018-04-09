@@ -1,0 +1,101 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        function back() {
+            window.location.href = document.referrer
+        }
+    </script>
+{% endblock %}
+{% block main %}
+    <div style="float: left;width: 900px">
+        {% for choice in name %}
+            <form class="form-inline pull-right" role="form" method="post" enctype="multipart/form-data"
+                  action="{% url 'adc:Yesupdate' %}"
+                  accept-charset="utf-8">
+                {% csrf_token %}
+                <div class="panel panel-default" style="margin-left: 8px;max-width: 1100px">
+
+                    <div class="panel-body  " style="float: left;padding: 10px;max-width: 1100px">
+                        光纤编号: <input type="text" name="fbname" readonly="readonly" class="form-control"
+                                     value="{{ choice.FibreName }}">
+                        所属光缆: <input type="text" name="cab" readonly="readonly" class="form-control"
+                                     value="{{ choice.Cable }}">
+                        A机柜: <input type="text" name="acap" class="form-control" value="{{ choice.Acap }}">
+
+
+                    </div>
+
+                    <div class="panel-body  " style="float: left">
+                       &nbsp &nbsp;&nbsp;   B机柜:<input type="text" name="bcap" class="form-control" value="{{ choice.Bcap }} ">
+                       &nbsp;&nbsp;&nbsp; A机位: <input type="text" name="apos" class="form-control"
+                                                 value="{{ choice.Aposition }}">
+
+                        B机位: <input type="text" name="bpos" class="form-control"
+                                                             value="{{ choice.Bposition }}">
+
+
+
+                    </div>
+
+                    <div class="panel-body  " style="float: left;margin-right: 9px">
+                            &nbsp;&nbsp;  &nbsp;&nbsp; A端: <input type="text" name="aport" class="form-control"
+                                                value="{{ choice.Aport }}">
+                        &nbsp;  &nbsp;  &nbsp;&nbsp; &nbsp;&nbsp; B端:<input type="text" name="bport" class="form-control"
+                                                            value="{{ choice.Bport }}">
+                        主负责人: <input type="text" name="man" class="form-control"
+                                      value="{{ choice.MainMan }}">
+
+
+
+                    </div>
+                    <div class="panel-body  " style="float: left;margin-right: 9px">
+                         备份负责人: <input type="text" name="bk" class="form-control" value="{{ choice.BkMan }}">
+                        分配时间: <input type="text" name="date" class="form-control"
+                                     value="{{ choice.StartData }}">
+
+                    </div>
+
+                    <div class="pp" style="margin-left: 10px;width: 310px" style="float: left;margin-left: 10px">
+                         当前光缆状态: {{ choice.STATE }}<br>
+                        状态修改:
+
+                        <label class="radio-inline">
+                            <input type="radio" name="state" id="optionsRadios3" value="已使用">已使用
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="state" id="optionsRadios4" value="未分配">未分配
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="state" id="optionsRadios3" value="故障"> 故障
+                        </label>
+
+                    </div>
+                    <div class="pp" style="width: 160px" ">
+                        <button style="width: 50px;height: 50px;margin-left: 10px" type="submit" value="完成"
+                                class="btn btn-default btn-sm">
+                            完成
+                        </button>
+
+
+                        <button type="button" name="back" value="返回"
+                                style="margin-left: 1px;width: 50px;height: 50px" onclick="self.location='Fibe';"
+                                class="btn btn-default btn-sm">返回
+                        </button>
+
+
+                    </div>
+                    <div class="panel-body " style="display: none">
+                        <input type="text" name="oldname" class="form-control"
+                               value="{{ choice.FibreName }}">
+
+                    </div>
+
+
+                </div>
+
+            </form>
+
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

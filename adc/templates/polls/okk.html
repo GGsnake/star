@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<style>
+</style>
+<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-theme.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-theme.min.css' %}"/>
+<script src="{% static 'jquery-3.3.1.js' %}"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../../../../AppData/Local/Temp/Rar$DRa0.861/jQueryLeftNav/js/jquery.js"></script>
+</head>
+<script src="jquery-3.3.1.js"></script>
+<script>
+     function back() {
+        history.back();
+     }
+</script>
+
+<body>
+<div style="margin: auto;width: 50%;text-align: center">
+    <div><a style="text-align: center;text-decoration: none;display: block;padding: 14px 16px;
+;background-color: #761c19;color: white" onclick="back()">点击返回</a></div>
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                找到{{ num }}个错误
+            </h3>
+        </div>
+        {% for key in error %}
+        <div class="panel-body">
+            {{ key }}
+        </div>
+        {% endfor %}
+
+    </div>
+
+
+</div>
+
+</body>
+</html>

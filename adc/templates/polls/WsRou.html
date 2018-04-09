@@ -1,0 +1,347 @@
+{% extends "polls/admin-index.html" %}
+
+{% block js %}
+
+    <script>
+        var valus;
+        var page = 1;
+        var toall = 0;
+
+        function blank() {
+            $('#tabb').append(" <tr id=\"" + "" + "\">\n" +
+                "                        <th>" + "<a href='Show?id=" + "" + "'>" + "" + "</a>" + "</th>\n" +
+                "                        <th>" + "未找到" + "</th>\n" +
+                "                        <th>" + "未找到" + "</th>\n" +
+                "                        <th>" + "<h6>未找到</h6>" + "</th>\n" +
+                "                        <th>" +
+                "                    </tr>"
+            )
+        }
+
+        function onload(item) {
+                     {% if request.user.is_superuser %}
+                  $('#tabb').append(" <tr id=\"" + item.ChanelRouteNumber + "\">\n" +
+                "                        <th>" + "<a href='WsShow?id=" + item.ChanelRouteNumber + "'>" + item.ChanelRouteNumber + "</a>" + "</th>\n" +
+                "                        <th>" + item.ChanelNumbers + "</th>\n" +
+                "                        <th>" + item.FibreName + "</th>\n" +
+                "                        <th>" + " <button type=\"button\"  onclick=\"window.location.href='wsrupdate?id=" + item.ChanelRouteNumber + "'\" name=\"" + item.ChanelRouteNumber + "\"\n" +
+                "                                 style=\"color: white;background-color: deepskyblue\"           class=\"btn btn-default btn-sm\">修改" +
+                "                                    </button>" +
+                "  <button type=\"button\"  style=\"background-color: #ea1328;color: white\" onclick=\"deleteef(this)\" name=\"" + item.ChanelRouteNumber + "\" class=\"btn btn-default btn-sm\">删除</button>\n"
+                + "</th>\n" +
+                "                    </tr>")
+            {% else %}
+                             $('#tabb').append(" <tr id=\"" + item.ChanelRouteNumber + "\">\n" +
+                "                        <th>" + "<a href='WsShow?id=" + item.ChanelRouteNumber + "'>" + item.ChanelRouteNumber + "</a>" + "</th>\n" +
+                "                        <th>" + item.ChanelNumbers + "</th>\n" +
+                "                        <th>" + item.FibreName + "</th>\n" +
+                "                        <th>" + " <button type=\"button\"  disabled=\"disabled\" onclick=\"window.location.href='wsrupdate?id=" + item.ChanelRouteNumber + "'\" name=\"" + item.ChanelRouteNumber + "\"\n" +
+                "                                 style=\"color: white;background-color: deepskyblue\"           class=\"btn btn-default btn-sm\">修改" +
+                "                                    </button>" +
+                "  <button type=\"button\"  disabled=\"disabled\"  style=\"background-color: #ea1328;color: white\" onclick=\"deleteef(this)\" name=\"" + item.ChanelRouteNumber + "\" class=\"btn btn-default btn-sm\">删除</button>\n"
+                + "</th>\n" +
+                "                    </tr>")
+                {#$('#tabb').append(" <tr id=\"" + item.ChanelRouteNumber + "\">\n" +#}
+                {#"                        <th>" + "<a href='WsShow?id=" + item.ChanelRouteNumber + "'>" + item.ChanelRouteNumber + "</a>" + "</th>\n" +#}
+                {#"                        <th>" + item.ChanelNumbers + "</th>\n" +#}
+                {#"                        <th>" + item.FibreName + "</th>\n" +#}
+                {#"                        <th>" + " <button type=\"button\"  onclick=\"window.location.href='wsrupdate?id=" + item.ChanelRouteNumber + "'\" name=\"" + item.ChanelRouteNumber + "\"\n" +#}
+                {#"                                 style=\"color: white;background-color: deepskyblue\"           class=\"btn btn-default btn-sm\">修改" +#}
+                {#"                                    </button>" + "</th>\n" +#}
+                {#"                    </tr>")#}
+            {% endif %}
+
+
+        }
+
+        function deletee(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "Wetfirbe/",
+                        data: {id: id},
+                        success: function (data) {
+
+                            alert("删除成功")
+                            $('#' + id).empty()
+                            window.location.reload()
+                        }
+                    })
+            });
+        };
+
+        function deleteef(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "Wetfirbe/",
+                        data: {id: id},
+                        success: function (data) {
+
+                            alert("删除成功")
+                            $('#' + id).empty()
+                        }
+                    })
+            });
+        };
+
+        function Load() {
+
+            if ($("#firenumber").val() != "") {
+                var fis = $("#firenumber").val();
+            }
+            if ($("#channelname").val() != "") {
+                var channelname = $("#channelname").val();
+            }
+            if ($("#pagesize").val() != "") {
+                var pagesize = $("#pagesize").val();
+            }
+            $.ajax({
+                url: "QureyWs/",
+                data: {firenumber: fis, channelname: channelname, page: page, state: valus, pagesize: pagesize},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data.mo, function (i, item) {
+                        if (item.FibreName == "未找到") {
+                            blank();
+                        }
+                        else {
+                            toall = data.map;
+                            $("#toall").text("总共" + toall + "页");
+                            onload(item);
+
+                        }
+                    });
+                }
+            })
+        }
+
+        var pagesize = 10;
+
+        function Loac() {
+            var fis = $.cookie('wsfirenumberid');
+            var channelname = $.cookie('channelname')
+
+            if (channelname && channelname != 0 && channelname != "null") {
+                $("#channelname").val($.cookie('channelname'));
+            }
+            if (fis && fis != 0 && fis != "null") {
+                $("#firenumber").val($.cookie('wsfirenumberid'));
+            }
+
+            if ($("#firenumber").val() != "") {
+               fis = $("#firenumber").val();
+            }
+            if ($("#channelname").val() != "") {
+                channelname = $("#channelname").val();
+            }
+            if ($("#pagesize").val() != "") {
+                pagesize = $("#pagesize").val();
+            }
+            {# 记录初始化的显示数 #}
+            var ise = $.cookie('pagesize')
+            if (ise == null) {
+                pagesize = 10;
+                $("#pagesize").val("10");
+            }
+            else {
+                pagesize = ise;
+                $("#pagesize").val(ise);
+            }
+            var pag = $.cookie('wsd')
+            if (pag == null) {
+                page = 1;
+                $("#wsd").text("当前是第" + page + "页");
+            }
+            else {
+                page = parseInt(pag);
+                $("#wsd").text("当前是第" + page + "页");
+            }
+            $.ajax({
+                url: "QureyWs/",
+                data: {firenumber: fis, channelname: channelname, page: page, pagesize: pagesize},
+                success: function (data) {
+                    toall = data.map;
+                    jQuery.each(data.mo, function (i, item) {
+
+                        if (item.ChanelRouteNumber == "未找到") {
+                            $("#toall").text("总共" + "0" + "页");
+                            blank();
+                        }
+                        else {
+                            onload(item);
+                            $("#toall").text("总共" + toall + "页");
+                        }
+                    });
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            Loac();
+            $("#pagesize").change(function () {
+
+                $('#quee').click();
+            });
+            $("#prev").click(function () {
+                if (page > 1) {
+                    page = page - 1;
+                    Load(); //加载数据
+                    $.cookie('wsd', page, {expires: 30})
+                    $("#wsd").text("当前是第" + page + "页");
+                }
+            });
+            //给下一页加点击事件
+
+            $("#next").click(function () {
+                if (page < toall) {
+                    page = page + 1;
+                    Load(); //加载数据
+                    $.cookie('wsd', page, {expires: 30})
+                    $("#wsd").text("当前是第" + page + "页");
+                    ;
+
+                }
+            });
+            var pagesize;
+            $("#clear").click(function () {
+
+                $.cookie('wsfirenumberid', null);
+                $.cookie('channelname', null);
+                $.cookie('Wspagesize', null);
+
+                $("#firenumber").val("");
+                $("#channelname").val("");
+                $("#quee").click();
+            });
+            $("#quee").click(function () {
+                $.cookie('wsd', 1, {expires: 30});
+                $.cookie('wsfirenumberid', $("#firenumber").val(), {expires: 30});
+                $.cookie('channelname', $("#channelname").val(), {expires: 30});
+                $.cookie('Wspagesize', $("#pagesize").val(), {expires: 30});
+                toall = 0;
+
+                if ($("#firenumber").val() != "") {
+                    var fis = $("#firenumber").val();
+                }
+                if ($("#channelname").val() != "") {
+                    var channelname = $("#channelname").val();
+                }
+                if ($("#pagesize").val() != "") {
+                    pagesize = $("#pagesize").val();
+                }
+                page = 1;
+                $("#wsd").text("当前是第" + page + "页");
+                $.ajax({
+                    url: "QureyWs/",
+                    data: {firenumber: fis,  channelname: channelname, page: page, pagesize: pagesize}
+                    ,
+                    success: function (data) {
+                        toall = data.map
+                        $("#toall").text("总共" + toall + "页");
+                        $('#tabb').empty()
+                        jQuery.each(data.mo, function (i, item) {
+                            if (item.ChanelRouteNumber == "未找到") {
+                                blank();
+                            }
+                            else {
+                                onload(item);
+                            }
+                        });
+                    }
+                })
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="contnet" style="float: left;max-width: 1080px">
+        <div style="float: left">
+            <div style="float:left;width: 222px ;padding: 10px"> 所属光纤编号<input type="text" name="firenumber"
+                                                                              id="firenumber"
+                                                                              class="form-control">
+            </div>
+
+            <div style="float:left;width: 222px ;padding: 10px"> 波道编号<input type="text" name="channelname" id="channelname"
+                                                                            class="form-control"
+            >
+            </div>
+
+            <div style="float:left;width: 72px;padding: 10px "><br/>
+                <button type="submit" id="quee" class="btn btn-default" style="background-color: #3e8f3e;color: white">
+                    查询
+                </button>
+            </div>
+            <div style="float:left;width: 72px;padding: 10px "><br/>
+                <button   type="submit" id="clear" class="btn btn-default" style="background-color: #ea1328;color: white">
+                    清空条件
+                </button>
+
+            </div>
+
+            <div style="float:left;width: 88px ;margin-left: 39px;padding: 10px">显示数
+                <select onselect="onload()" id="pagesize" name="pagesize">
+                    <option value="5">5</option>
+                    <option selected="selected" value="10">10</option>
+                    <option value="15">15</option>
+                </select>
+            </div>
+            {#        <div style="float:left;width: 72px;padding: 10px "><br/>#}
+            {#            <button type="submit" id="clear" class="btn btn-default">清空搜索条件</button>#}
+            {#        </div>#}
+        </div>
+        <div>
+
+        </div>
+        <div class="panel-body">
+
+        </div>
+        {#    <button style=" margin-left: 7px;background-color: #00afee;color: #ffffff" onclick="window.location.href='add'"#}
+        {#            type="button" class="am-btn am-btn-default"><span class="glyphicon glyphicon-plus"></span> 新增#}
+        {#    </button>#}
+                            {% if request.user.is_superuser %}
+
+        <button style=" margin-left: 7px;background-color: #00afee;color: #ffffff"
+                onclick="window.location.href='wsrload'"
+                type="button" class="btn btn-default btn-sm">数据导入
+        </button>
+        {% endif %}
+        <button style=" margin-left: 5px;background-color: #00ff8f;color: #313335"
+                onclick="window.location.href='bodao'"
+                type="button" class="btn btn-default btn-sm">数据导出
+        </button>
+        <table id="xs" style="margin-left: 7px;margin-right: 8px;width: 1000px;font-size: 13px"
+               class="table table-bordered table-hover">
+            <thead>
+            <tr id="s">
+                <th width="10%">波道路由</th>
+                <th width="18%">波道</th>
+                <th width="28%">光纤组</th>
+                <th width="9%">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tabb">
+            </tbody>
+        </table>
+        <div class="pagination" id="pge" style="margin-left: 7px">
+     <span class="step-links">
+           <input id="prev" type="button" class="btn btn-default btn-sm" value="上一页">
+        <span class="current" id="wsd">
+            当前第1页
+        </span>
+          <input id="next" class=" btn btn-default btn-sm" type="button" value="下一页">
+    <span class="cc" id="toall">
+            总共
+        </span>
+    </span>
+        </div>
+    </div>
+
+{% endblock %}

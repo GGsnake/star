@@ -1,0 +1,114 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<script src="{% static 'polls/jquery-3.3.1.js' %}"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script>
+
+        $(document).ready(function () {
+            $(".hided").click(function () {
+                var val = $(this).attr("id");
+                var iff = $('.' + val).attr("id");
+                {#                $("." + val).toggle(1342);#}
+
+                if (iff == "2") {
+                    $('.' + val).slideToggle("slow");
+                    $('.' + val).empty()
+                    $('.' + val).attr("id", "1");
+                }
+                else {
+
+                    $.ajax({
+                        url: "ajax_list/",
+                        data: {idd: val},
+                        success: function (data) {
+                            jQuery.each(data, function (i, item) {
+
+                                $('.' + val).append("</br><div >" + "" + item.name + "" + "<h4>" + item.content + "</h4>" + "</div>")
+                                $('.' + val).attr("id", "2");
+                            });
+
+
+                        }
+
+                    })
+                }
+            });
+
+        });
+
+    </script>
+</head>
+<body class="box-group"
+      style=" width:100%; height:100% ;background-image: url(https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1517152057&di=c5c8c4c5781aaef3287d945275ee58a2&src=http://pic.shejiben.com/caizhi/day_151020/20151020_f93f3de1f90090d391716LyVtvKdIvHW.jpg)">
+<nav class="navbar navbar-default col-xs-5 col-lg-offset-3" role="navigation">
+    <div class="container-fluid">
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="#">最新</a></li>
+                <li><a href="#">热门</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div>
+    <div class="navbar-nav">
+        <div class="col-lg-offset-3  col-xs-5 ro" style="height: auto;">
+
+            {% for key in names %}
+                <ul class="media-list">
+                    <li class="media">
+                        <a class="media-left">
+                            <img class="img-circle media-object" style="height: 55px;width: 55px"
+                                 src="http://{{ key.image }}"
+                            >
+                        </a>
+                        <div class="media-body">
+                            <div style="height: 21px"></div>
+                            <h4 class="media-heading">{{ key.name }}</h4>
+                            <!-- 嵌套的媒体对象 -->
+                            <div class="media">
+                                <p class="media-left">
+                                <h3> {{ key.content }}</h3>
+                                </p>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li class="media">
+                        <div><a class="pull-left">
+                            <button id="{{ key.id }}" class="hided" value="false" type="button">评论</button>
+                        </a></div>
+
+                        <div class="{{ key.id }}" style="margin-left: 30px" id="1">
+
+                        </div>
+                        {#                        <div class="media-body">#}
+                        {#                            <a id="{{ key.name }}" class="{{ key.id }}" align="middle" hidden="hidden">#}
+                        {#                                <div id="io" align="center" style="border: 1px solid #c0c0c0;">#}
+                        {#                                    {% for xi in key.bloginfo_set.all %}#}
+                        {#                                        <div class="panel-danger bg-success text-left">#}
+                        {#                                            <h6>用户:{{ xi.title }}</h6>#}
+                        {#                                            <h5>&nbsp&nbsp&nbsp&nbsp&nbsp{{ xi.content }}</h5>#}
+                        {#                                        </div>#}
+                        {#                                    {% endfor %}#}
+                        {#                                </div>#}
+                        {#                            </a>#}
+                        {#                        </div>#}
+                    </li>
+                </ul>
+                <div class="row" style="height: 20px">
+
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,163 @@
+{% load staticfiles %}
+<style>
+
+</style>
+<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-theme.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-theme.min.css' %}"/>
+<script src="{% static 'jquery-3.3.1.js' %}"></script>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'golo.css' %}">
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../../../../AppData/Local/Temp/Rar$DRa0.861/jQueryLeftNav/js/jquery.js"></script>
+</head>
+<body>
+<script src="jquery-3.3.1.js"></script>
+<script>
+    function verification() {
+        if ($('#fbname').val() == '') {
+            alert('姓名不能为空!');
+            return false;
+        }
+        if ($('#cab').val() == '') {
+            alert('内容不能为空!');
+            return false;
+        }
+
+        $('#btton').click();
+
+
+
+    }
+
+</script>
+
+<nav class="csa" role="navigation" style="margin-bottom: 10px;height: 60px">
+    <div class="container-fluid" style="background: #53b3f3">
+        <div class="navbar-header">
+            <h2 style="color: white">设备查询系统</h2>
+        </div>
+        <div class="dao" style="float: right;padding: 10px;">
+                    <a style="color: #FFFFFF" href="{% url 'adc:out' %}">退出</a>
+
+        </div>
+    </div>
+</nav>
+<div class="container-fluid ">
+     <div class="c" style="float:left;width: 13%">
+        <div class="account-l fl">
+            <a class="list-title" style="color: #0f0f0f">管理</a>
+
+            <ul id="accordion" class="accordion">
+                <li>
+                    <div class="link">设备管理<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                        <li id="shop"><a href="{% url 'adc:Channel' %}">波道</a></li>
+                        <li id="publicproducts"><a href="{% url 'adc:Cabview' %}">光缆</a></li>
+                        <li id="productlists"><a href="{% url 'adc:Fibe' %}">光纤</a></li>
+                        <li id="mysaled"><a href="{% url 'adc:Fibe' %}">波道路由</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+
+        </div>
+    </div>
+
+               <div style="background: #f5f5f5;float:right;width:87%">
+
+                    <div class="span4">
+
+                        <input type="button" class="btn btn-default btn-sm" name="back" value="返回"
+                               onclick="javascript:history.back(-1);"/>
+
+                        <form class="form-inline pull-right" role="form" method="post" enctype="multipart/form-data"
+                              action="{% url 'adc:fibre' %}"
+                              accept-charset="utf-8">
+                            {% csrf_token %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">新增</h3>
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+                                    光纤编号: <input type="text" placeholder="必填项" name="fbname" id="fbname"
+                                                 class="form-control"
+                                >
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+                                    所属光缆: <input type="text" placeholder="必填项" name="cab" id="cab" class="form-control"
+                                >
+                                </div>
+
+
+                                <div class="panel-body col-xs-2 ">
+
+                                    A机柜: <input type="text" name="acap" class="form-control">
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+
+                                    B机柜: <input type="text" name="bcap" class="form-control">
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+
+                                    A机位: <input type="text" name="apos" class="form-control"
+                                >
+
+
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+
+                                    B机位: <input type="text" name="bpos" class="form-control"
+                                >
+
+
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+
+                                    A端: <input type="text" name="aport" class="form-control">
+
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+
+                                    B端:<input type="text" name="bport" class="form-control">
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+
+                                    主要负责人: <input type="text" name="man" class="form-control"
+                                >
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+
+                                    备份负责人: <input type="text" name="bk" class="form-control">
+                                </div>
+                                <div class="panel-body col-xs-2 ">
+                                    分配时间: <input type="text" name="date" class="form-control"
+                                >
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="panel-body col-xs-1 ">
+                               <button style="width: 50px;height: 50px" type="button" value="完成"
+                                onclick="verification()" class="btn btn-default"  >完成
+                            </button>   <button style="width: 2px;height: 2px;display: none" type="submit" value=""
+                                id="btton"   >
+                            </button>
+                            </div>
+                        </form>
+
+                    </div>
+
+    </div><!--/.fluid-container-->
+
+
+</div>
+</body>
+</html>

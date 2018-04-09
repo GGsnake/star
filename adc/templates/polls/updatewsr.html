@@ -1,0 +1,55 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        function back() {
+            window.location.href = document.referrer
+        }
+    </script>
+{% endblock %}
+{% block main %}
+    <div style="float: left">
+        {% for choice in name %}
+            <form class="form-inline pull-right" role="form" method="post" enctype="multipart/form-data"
+                  action="{% url 'adc:srupdate' %}"
+                  accept-charset="utf-8">
+                {% csrf_token %}
+                <div class="panel panel-default" style="margin-left: 8px;max-width: 1100px">
+
+                    <div class="panel-body  " style="float: left;padding: 10px;max-width: 1100px">
+                        路由编号: <input type="text" name="ChanelRouteNumber" readonly="readonly" class="form-control"
+                                     value="{{ choice.ChanelRouteNumber }}">
+                        业务: <input type="text" name="Business"  class="form-control"
+                                   value="{{ choice.Business }}">
+                        客户: <input type="text" name="Customer" class="form-control" value="{{ choice.Customer }}">
+
+                    </div>
+
+                    <div class="pp" style="width: 110px" style="float: left">
+                        <button style="width: 50px;height: 50px;margin-left: 10px" type="submit" value="完成"
+                                class="btn btn-default btn-sm">
+                            完成
+                        </button>
+
+
+                        <button type="button" name="back" value="返回"
+                                style="float: right;width: 50px;height: 50px"
+                                onclick="self.location='Wsr';"
+                                class="btn btn-default btn-sm">返回
+                        </button>
+                        </label>
+
+                    </div>
+
+                    <div class="pp" style="margin-left: 10px"> 所属波道:   {% for cc in list %}
+                        <h5><a href='ChShow?id={{ cc }}'>{{ cc }}</a></h5>
+                    {% endfor %}</div>
+
+
+                </div>
+
+            </form>
+
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

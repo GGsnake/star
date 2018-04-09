@@ -1,0 +1,280 @@
+{% load staticfiles %}
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e7e7e7;
+        background-color: #f3f3f3;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: #666;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    li a.active {
+        color: white;
+        background-color: #4CAF50;
+    }
+
+    #for {
+        margin: auto;
+        width: 50%;
+        margin-top: 200px;
+        padding: 10px;
+    }
+
+</style>
+<!DOCTYPE html>
+<script src="{% static 'jquery-3.3.1.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-theme.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
+
+
+<!--<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    function deletee(obj) {
+        var id = obj.name;
+        $(document).ready(function () {
+
+            var con;
+            con = confirm("确定删除么?");
+            if (con == true)
+                $.ajax({
+                    url: "deletfirbe/",
+                    data: {id: id},
+                    success: function (data) {
+
+                        alert("删除成功")
+                        $('#' + id).empty()
+                        window.location.reload()
+                    }
+
+                })
+
+
+        });
+
+
+    };
+
+    $(document).ready(function () {
+        $("#quee").click(function () {
+
+            if ($("#protect").val() != "") {
+                var pro = $("#protect").val();
+            }
+            if ($("#firenumber").val() != "") {
+                var fis = $("#firenumber").val();
+            }
+
+            $.ajax({
+                url: "Queryfirbe/",
+
+                data: {firenumber: fis, protect: pro},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data, function (i, item) {
+//                        $('#tabb').append(" <tr>\n" +
+//                            "                        <td>" + "<a href=\"Show" + "?id=" + item.FibreName + "\" >" + item.FibreName + "</a>" + "</td>\n" +
+//                            "                        <td>" + item.Acap + "</td>\n" +
+//                            "                        <td>" + item.Bcap + "</td>\n" +
+//                            "                        <td>" + item.Aposition + "</td>\n" +
+//                            "                        <td>" + item.Bposition + "</td>\n" +
+//                            "                        <td>" + item.Aport + "</td>\n" +
+//                            "                        <td>" + item.Bport + "</td>\n" +
+//                            "                    </tr>")
+
+
+                        $('#tabb').append(" <tr id=\"" + item.FibreName + "\">\n" +
+                            "                        <td>" + "<input type=\"checkbox\" id=\"checkAll\" name=\"checkAll\"/>" + "</td>\n" +
+                            "                        <td>" + "<a href=\"" + "?id=" + item.FibreName + "\" >" + item.FibreName + "</a>" + "</td>\n" +
+                            "                        <td>" + item.Acap + "</td>\n" +
+                            "                        <td>" + item.Bcap + "</td>\n" +
+                            "                        <td>" + item.Aposition + "</td>\n" +
+                            "                        <td>" + item.Bposition + "</td>\n" +
+                            "                        <td>" + "  <button type=\"button\"  onclick=\"deletee(this)\" name=\"" + item.FibreName + "\" class=\"btn btn-default btn-sm\">删除</button>\n"
+                            +
+
+                            "                        </button>" + "</td>\n" +
+
+                            "                    </tr>"
+                        )
+
+                    });
+
+
+                }
+
+            })
+
+        });
+
+    });
+
+</script>
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="btn btn-default navbar-btn float-right">
+                登录
+            </button>
+        </div>
+        <div>
+            <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid ">
+    <div class="pull-left col-xs-2">
+        <ul class="list-group">
+
+            <li class="list-group-item " style="width: 100%;height: 55px"><a href="{% url 'adc:Cabview' %}">光缆</a>
+            </li>
+            <li class="list-group-item " style="width: 100%;height: 55px;background-color: #e5e5e5"><a
+                    style="color: #0f0f0f"
+                    href="{% url 'adc:Fibe' %}">光纤</a>
+            </li>
+            <li class="list-group-item " style="width: 100%;height: 55px"><a href="{% url 'adc:Channel' %}">波道</a>
+            </li>
+
+        </ul>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span9">
+                <div class="col-xs-10 ">
+                    <div class="span4 ">
+                        <button type="button" nam class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                        </button>
+                        <form class="form-inline pull-right" role="form" method="post" enctype="multipart/form-data"
+                              action="{% url 'adc:upFirbe' %}"
+                              accept-charset="utf-8">
+                            {% csrf_token %}
+                            <a href="{% url 'adc:downFirbe' %}">光纤数据导入模版示例下载</a>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        数据快捷导入------------
+                                        <br>请注意文件是xlsx类型的文件并且文件名开头为光纤
+
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <input type="file" class="btn-default" name="file">
+                                </div>
+                                <div class="panel-body">
+                                                              <span class="glyphicon glyphicon-cloud-upload"><input
+                                                                      type="submit"
+                                                                      class="btn-default"
+                                                                      value="确定导入"></span>
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                        <ul class="list-group " style="background-color: #ffffff">
+                            光纤编号 <input type="text" name="firenumber" id="firenumber"
+                                        placeholder="请输入光纤编号">
+                            维护人 <input type="text" name="protect" id="protect"
+                                       placeholder="请输入名字">
+
+                            <button type="submit" id="quee" class="btn btn-default">查询</button>
+
+                        </ul>
+                    </div><!--/span-->
+                    <div class="span4">
+                        <input type="checkbox" id="checkAll" name="checkAll"/>
+                        <div class="panel-body">
+                            <div class="list-op" id="list_op">
+
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                                </button>
+
+
+                                <button type="button" class="btn btn-default btn-sm">
+                                    修改
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
+                                </button>
+                            </div>
+                        </div>
+                        <table id="xs" class="table table-hover">
+                            <thead>
+                            <tr id="s">
+                                <th><input type="checkbox" id="checkAll" name="checkAll"/></th>
+
+                                <th>光纤编号</th>
+                                <th>A机柜</th>
+                                <th>B机柜</th>
+                                <th>A机位</th>
+                                <th>负责人</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <thead id="tabb">
+                            {% for fibes in fibe %}
+                            <tr id="{{ fibes.FibreName }}">
+                                <th><input type="checkbox" id="checkAll" name="checkAll"/></th>
+                                <th><a href='Show?id={{ fibes.FibreName }}'>{{ fibes.FibreName }}</a></th>
+                                <th>{{ fibes.Acap }}</th>
+                                <th>{{ fibes.Bcap }}</th>
+                                <th>{{ fibes.Aposition}}</th>
+                                <th>{{ fibes.MainMan }}</th>
+                                <th>
+                                    <button type="button" name="{{ fibes.FibreName }}"
+                                            class="btn btn-default btn-sm"><a
+                                            href='update?id={{ fibes.FibreName }}'>修改</a>
+                                    </button>
+                                    <button type="button" onclick="deletee(this)" name="{{ fibes.FibreName }}"
+                                            class="btn btn-default btn-sm">删除
+                                    </button>
+                                </th>
+                                </th>
+                            </tr>
+                            {% endfor %}
+                            </thead>
+                        </table>
+                    </div>
+                    <!--/span-->
+                </div><!--/row-->
+
+            </div>
+        </div>
+    </div><!--/.fluid-container-->
+
+
+</div>
+</body>
+</html>

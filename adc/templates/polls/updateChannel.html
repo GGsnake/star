@@ -1,0 +1,121 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        function back() {
+            window.location.href = document.referrer
+        }
+    </script>
+{% endblock %}
+{% block main %}
+    <div style="float: left">
+        {% for choice in name %}
+            <form class="form-inline pull-right" role="form" method="post" enctype="multipart/form-data"
+                  action="{% url 'adc:channelupdate' %}"
+                  accept-charset="utf-8">
+                {% csrf_token %}
+                <div class="panel panel-default" style="margin-left: 8px;min-width: 1100px;max-width: 1150px">
+
+                    <div class="panel-body  " style="float: left;padding: 10px;max-width: 1100px">
+                        波道编号: <input type="text" name="Channelname" readonly="readonly" class="form-control"
+                                     value="{{ choice.Channelname }}">
+
+                    </div>
+
+                    <div class="panel-body  " style="float: left;padding: 10px;max-width: 1100px">
+                        A机柜: <input type="text" name="acap" class="form-control" value="{{ choice.Acap }}">
+                        B机柜:<input type="text" name="bcap" class="form-control" value="{{ choice.Bcap }} ">
+                        &nbsp;&nbsp; &nbsp;&nbsp; 是否多芯:<input type="text" name="CORE" class="form-control"
+                                                              value="{{ choice.CORE }}">
+
+                    </div>
+                    <div class="panel-body  " style="float: left">
+                        &nbsp;&nbsp; A机位: <input type="text" name="Aposition" class="form-control"
+                                                 value="{{ choice.Aposition }}">
+
+                        &nbsp;&nbsp;&nbsp;&nbsp; B机位: <input type="text" name="Bposition" class="form-control"
+                                                             value="{{ choice.Bposition }}">
+                        &nbsp;&nbsp;  波道类型:<input type="text" name="TYPE" class="form-control"
+                                    value="{{ choice.TYPE }}">
+
+                      &nbsp;&nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;业务: <input type="text" name="Business"
+                                   class="form-control" value="{{ choice.Business}}">
+
+
+                    </div>
+                    <div class="panel-body  " style="float: left">
+                        &nbsp;&nbsp; A波道: <input type="text" name="AChannel" class="form-control"
+                                                 value="{{ choice.AChannel }}">
+
+                        &nbsp;&nbsp;&nbsp;&nbsp; B波道: <input type="text" name="BChannel" class="form-control"
+                                                             value="{{ choice.BChannel }}">
+                        &nbsp;&nbsp; A端设备: <input type="text" name="Aequipment" class="form-control"
+                                                  value="{{ choice.Aequipment }}">
+                      &nbsp; B端设备:<input type="text" name="Bequipment" class="form-control"
+                                                              value="{{ choice.Bequipment }}">
+
+
+                    </div>
+
+                    <div class="panel-body  " style="float: left;margin-right: 9px">
+                        A资产号: <input type="text" name="Aassets" class="form-control"
+                                      value="{{ choice.Aassets }}">
+                        B资产号: <input type="text" name="Bassets" class="form-control"  value="{{ choice.Bassets }}">
+                        主负责人:<input type="text" name="Mainman" class="form-control" value="{{ choice.Mainman }}">
+                        备份负责人: <input type="text" name="BkMan" class="form-control" value="{{ choice.BkMan }}">
+
+                    </div>
+                    <div class="panel-body  " style="float: left;margin-right: 9px">
+                           &nbsp;&nbsp; &nbsp;&nbsp; 客户: <input type="text" name="Customer" class="form-control"
+                                   value="{{ choice.Customer }}">
+
+
+                    </div>
+
+                    <div class="pp" style="float: left;margin-left: 10px">
+                                                当前波道状态: {{ choice.STATE }}<br>
+                        状态修改:
+
+                        <label class="radio-inline">
+                            <input type="radio" name="STATE" id="optionsRadios3" value="已使用">已使用
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="STATE" id="optionsRadios4" value="未分配">未分配
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="STATE" id="optionsRadios3" value="故障"> 故障
+                        </label>
+
+                    </div>
+                    <div class="pp" style="width: 110px" >
+                        <button style="width: 50px;height: 50px;margin-left: 10px" type="submit" value="完成"
+                                class="btn btn-default btn-sm">
+                            完成
+                        </button>
+
+
+                        <button type="button" name="back" value="返回"
+                                style="float: right;width: 50px;height: 50px"
+                                onclick="self.location='Channel';"
+                                class="btn btn-default btn-sm">返回
+                        </button>
+
+
+                    </div>
+                    <div class="panel-body " style="display: none">
+                        <input type="text" name="oldname" class="form-control"
+                               value="{{ choice.FibreName }}">
+
+                    </div>
+                    <div class="pp"style="margin-left: 10px"> 所属光纤:   {% for cc in list %}
+                            <h5><a href='Show?id={{ cc }}'>{{ cc }}</a></h5>
+                    {% endfor %}</div>
+
+
+                </div>
+
+            </form>
+
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

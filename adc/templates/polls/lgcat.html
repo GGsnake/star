@@ -1,0 +1,309 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+        var valus;
+        var page = 1;
+        var toall = 0;
+
+        function blank() {
+            $('#tabb').append(" <tr id=\"" + "" + "\">\n" +
+                "                        <th>" + "<a href='Show?id=" + "" + "'>" + "" + "</a>" + "</th>\n" +
+                "                        <th>" + "" + "</th>\n" +
+                "                        <th>" + "" + "</th>\n" +
+                "                        <th>" + "" + "</th>\n" +
+                "                        <th>" +
+                "                    </tr>"
+            )
+        }
+        function onload(item) {
+            {% if request.user.is_superuser %}
+                $('#tabb').append(" <tr style=\"height:9px;padding:0px\" id=\"" + item.FibreName + "\">\n" +
+                    "                        <th>" + item.id + "</th>\n" +
+                    "                        <th>" + item.logname + "</th>\n" +
+                    "                        <th>" + item.Credate + "</th>\n" +
+                    "                        <th>" + item.userid + "</th>\n" +
+                    "                        <th>" + item.content + "</th>\n" +
+
+                    "                    </tr>")
+            {% else %}
+                $('#tabb').append(" <tr style=\"height:6px\" id=\"" + item.FibreName + "\">\n" +
+                    "                        <th>" + "<a href='Show?id=" + item.FibreName + "'>" + item.FibreName + "</a>" + "</th>\n" +
+                    "                        <th>" + item.Cable + "</th>\n" +
+                    "                        <th>" + item.MainMan + "</th>\n" +
+                    "                        <th>" + item.StartData + "</th>\n" +
+                    "                        <th>" + " <button type=\"button\"  onclick=\"window.location.href='update?id=" + item.FibreName + "'\" name=\"" + item.FibreName + "\"\n" +
+                    "                                 style=\"color: white;background-color: deepskyblue; \"           class=\"glyphicon glyphicon-remove\">修改" +
+                    "                                    </button>" +
+                    "</th>\n" +
+                    "                    </tr>")
+            {% endif %}
+        }
+
+        function deletee(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "deletfirbe/",
+                        data: {id: id},
+                        success: function (data) {
+
+                            alert("删除成功")
+                            $('#' + id).empty()
+                            window.location.reload()
+                        }
+                    })
+            });
+        };
+
+        function deleteef(obj) {
+            var id = obj.name;
+            $(document).ready(function () {
+                var con;
+                con = confirm("确定删除么?");
+                if (con == true)
+                    $.ajax({
+                        url: "delog/",
+                        data: {},
+                        success: function (data) {
+
+                            alert("删除成功")
+                            Loac();
+                            $('#' + id).empty()
+                        }
+                    })
+            });
+        };
+
+        function Load() {
+
+            if ($("#q").val() != "") {
+                var q = $("#q").val();
+            }
+            if ($("#pagesize").val() != "") {
+                var pagesize = $("#pagesize").val();
+            }
+            $.ajax({
+                url: "search/",
+                data: {q:q, page: page, pagesize: pagesize},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data.mo, function (i, item) {
+                        if (item.logname == "未找到") {
+                            blank();
+                        }
+                        else {
+                            if (i != 0) {
+                                onload(item);
+                            }
+                            else {
+                                toall = data.map;
+                                $("#toall").text("总共" + toall + "页");
+                                onload(item);
+                            }
+                        }
+                    });
+                }
+            })
+        }
+
+        var pagesize = 8;
+        var page=1;
+        function Loac() {
+            {#var protect = $.cookie('fsaf');#}
+            {#var fis = $.cookie('fifasfasd');#}
+            {#var cab = $.cookie('ccfsafcb')#}
+
+            {#if (fis && fis != 0 && fis != "null") {#}
+            {#    $("#firenumber").val($.cookie('fid'));#}
+            {#}#}
+            {##}
+                  if ($("#q").val() != "") {
+                    var q = $("#q").val();
+
+                }
+            {#if ($("#pagesize").val() != "") {#}
+            {#    var pagesize = $("#pagesize").val();#}
+            {#}#}
+            {# 记录初始化的显示数 #}
+            {#var ise = $.cookie('pagesi')#}
+            {#if (ise == null) {#}
+            {#    pagesize = 10;#}
+            {#    $("#pagesize").val("10");#}
+            {#}#}
+            {#else {#}
+            {#    pagesize = ise;#}
+            {#    $("#pagesize").val(ise);#}
+            {#}#}
+            {#var pag = $.cookie('pageid')#}
+            {#if (pag == null) {#}
+            {#    page = 1;#}
+            {#    $("#pageid").text("当前是第" + page + "页");#}
+                {#}#}
+                    {#else {#}
+                    {#    page = parseInt(pag);#}
+                    {#    $("#pageid").text("当前是第" + page + "页");#}
+                    {#}#}
+                        $.ajax({
+                            url: "search/",
+                            data: {q: q, page: page, pagesize: pagesize},
+                            success: function (data) {
+                                jQuery.each(data.mo, function (i, item) {
+                                    if (item.logname == "未找到") {
+                                        blank();
+                                    }
+                                    else {
+                                        if (i != 0) {
+                                            onload(item);
+                                        }
+                                        else {
+                                            toall = data.map;
+                                            $("#toall").text("总共" + toall + "页");
+                                            onload(item);
+
+                                        }
+                                    }
+                                });
+                            }
+                        })
+
+                }
+        $(document).ready(function () {
+            Loac();
+            $("#pagesize").change(function () {
+                $('#quee').click();
+            });
+            $("#prev").click(function () {
+                if (page > 1) {
+                    page = page - 1;
+                    Load(); //加载数据
+                    {#$.cookie('pageid', page, {expires: 30})#}
+                    $("#pageid").text("当前是第" + page + "页");
+                }
+            });
+
+            $("#next").click(function () {
+                if (page < toall) {
+                    page = page + 1;
+                    Load(); //加载数据
+                    {#$.cookie('pageid', page, {expires: 30})#}
+                    $("#pageid").text("当前是第" + page + "页");
+                    ;
+
+                }
+            });
+            var pagesize;
+            $("#clear").click(function () {
+                {#$.cookie('pagesi', null);#}
+                {#$("#protect").val("");#}
+            });
+            $("#quee").click(function () {
+                <!--$.cookie('pageid', 1, {expires: 30});-->
+                toall = 0;
+                if ($("#q").val() != "") {
+                    var q = $("#q").val();
+                }
+                if ($("#pagesize").val() != "") {
+                    pagesize = $("#pagesize").val();
+                }
+                page = 1;
+                $("#pageid").text("当前是第" + page + "页");
+                $.ajax({
+                    url: "search/",
+                    data: {q: q, pagesize: pagesize},
+
+                    success: function (data) {
+                        $('#tabb').empty()
+                        jQuery.each(data.mo, function (i, item) {
+                            if (item.logname == "未找到") {
+                                blank();
+                            }
+                            else {
+                                if (i != 0) {
+                                    onload(item);
+                                }
+                                else {
+
+                                    $("#toall").text("总共" + data.map + "页");
+                                    toall = data.map;
+                                    onload(item);
+
+                                }
+                            }
+                        });
+
+
+                    }
+                })
+            });
+        });
+
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="contnet" style="float: left;max-width: 1080px">
+        <div style="margin-left: 10px">
+  <div style="float:left;width: 90px ">
+
+              关键字  <input type="text" name="q" id="q" class="form-control" >
+             <div>
+
+
+            </div>
+                 <div style="padding-top:10px;min-width: 250px;max-width: 300px">
+                 <button type="submit"  id="quee" class="btn btn-default" style="background-color: #3e8f3e;color: white;float: left">
+                    查询
+                </button>
+                   <button type="submit" id="clear" onclick="deleteef(this)" class="btn btn-default" style="background-color: #ea1328;color: white;float: left">
+                    清空日志
+                </button>  <button type="submit" id="daochu" class="btn btn-default" onclick="window.location.href='daochu'" style="background-color: #23ccfe;color: white;float: left">
+                    导出日志
+                </button></div>
+
+
+            {#        <div style="float:left;width: 72px;padding: 10px "><br/>#}
+            {#            <button type="submit" id="clear" class="btn btn-default">清空搜索条件</button>#}
+            {#        </div>#}
+        </div>
+        <div>
+
+        </div>
+        <div class="panel-body">
+
+        </div>
+        {#    <button style=" margin-left: 7px;background-color: #00afee;color: #ffffff" onclick="window.location.href='add'"#}
+        {#            type="button" class="am-btn am-btn-default"><span class="glyphicon glyphicon-plus"></span> 新增#}
+        {#    </button>#}
+
+        <table id="xs" style="margin-left: 1px;margin-right: 8px;max-width: 800px;font-size: 10px;border-collapse:separate; border-spacing:0px 5px;"
+               class="table table-bordered table-hover">
+            <thead>
+            <tr  style="height: 12px" id="s">
+                <th width="5%">ID</th>
+                <th width="20%">操作</th>
+                <th width="20%">时间</th>
+
+                <th width="15%">用户</th>
+                <th width="15%">信息</th>
+            </tr>
+            </thead>
+            <tbody id="tabb">
+            </tbody>
+        </table>
+        <div class="pagination" id="pge" style="margin-left: 7px">
+     <span class="step-links">
+           <input id="prev" type="button" class="btn btn-default btn-sm" value="上一页">
+        <span class="current" id="pageid">
+            当前第1页
+        </span>
+          <input id="next" class=" btn btn-default btn-sm" type="button" value="下一页">
+    <span class="cc" id="toall">
+            总共
+        </span>
+    </span>
+        </div>
+
+{% endblock %}

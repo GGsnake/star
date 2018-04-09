@@ -1,0 +1,259 @@
+{% extends "polls/admin-index.html" %}
+{% block js %}
+    <script>
+
+        var valus;
+        $(function () {
+            $(":radio").click(function () {
+                valus = $(this).val();
+                page = 1;
+                $("#cid").text("当前是第" + page + "页");
+                Loac();
+            });
+        });
+        var page = 1;
+        var toall = 0;
+
+        function back() {
+            window.location.href = "Fibe"
+        }
+
+        function onload(itemsize) {
+
+            $('#tabb').append("  <tr class=\"warning\">\n" +
+                "                <th width=\"10%\"><a href='ChShow?id=" + itemsize.Channelname + "'>" + itemsize.Channelname + "</a></th>\n" +
+                "                <th width=\"10%\">" + itemsize.STATE + "</th>\n" +
+                "            </tr>\n"
+            )
+        }
+
+        function blank() {
+
+            $('#tabb').append("  <tr class=\"warning\">\n" +
+                "                <th width=\"10%\">没有</th>\n" +
+                "                <th width=\"10%\">没有</th>\n" +
+                "            </tr>\n"
+            )
+        }
+
+        gvChartInit();
+
+        function Load() {
+
+            var vall = $("#cad").text();
+            $.ajax({
+                url: "QureyChannel/",
+                data: {page: page, fir: vall, state: valus},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data.mo, function (i, item) {
+                        if (item.Channelname == "未找到") {
+                            $("#toall").text("总共" + "0" + "页");
+                            toall = 0;
+                            blank();
+                        }
+                        else {
+                            if (i != 0) {
+                                onload(item);
+                            }
+                            else {
+                                $("#toall").text("总共" + data.map + "页");
+                                toall = data.map;
+                                onload(item);
+
+                            }
+
+                        }
+
+
+                    });
+
+
+                }
+            })
+
+
+        }
+
+        function Loac() {
+            var vall = $("#cad").text();
+            $.ajax({
+                url: "QureyChannel/",
+                data: {page: page, Firbenumber: vall, state: valus},
+                success: function (data) {
+                    $('#tabb').empty();
+
+                    jQuery.each(data.mo, function (i, item) {
+                        if (item.Channelname == "未找到") {
+                            $("#toall").text("总共" + "0" + "页");
+                            toall = 0;
+                            blank();
+
+                        } else {
+
+                            $("#toall").text("总共" + data.map + "页");
+                            toall = data.map;
+                            onload(item);
+
+                        }
+
+
+                    });
+
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            Loac();
+            $("#prev").click(function () {
+                if (page > 1) {
+                    page = page - 1;
+                    Load(); //加载数据
+                    $("#cid").text("当前是第" + page + "页");
+                }
+
+
+            });
+            //给下一页加点击事件
+            $("#next").click(function () {
+                if (page < toall) {
+                    page = page + 1;
+                    Load(); //加载数据
+                    $("#cid").text("当前是第" + page + "页");
+
+                }
+            });
+            $('#myTable5').gvChart({
+                chartType: 'PieChart',
+                gvSettings: {
+                    vAxis: {title: 'No of players'},
+                    hAxis: {title: 'Month'},
+                    width: 480,
+                    height: 350
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
+{% block main %}
+ <input  style="margin-left: 7px" type="button" name="back" class="btn btn-default btn-sm" value="返回"
+                   onclick="back()"/>
+
+    {% for choice in name %}
+        <table id="xs" style="margin-left: 7px;width: 1000px" class="table table-bordered table-hover">
+
+            <thead>
+            <tr id="s">
+                <th>光纤编号</th>
+                <th>所属光缆</th>
+                <th>负责人</th>
+
+            </tr>
+            </thead>
+            <tbody id="SS">
+
+            <tr>
+                <th width="20%" id="cad">{{ choice.FibreName }}</th>
+                <th width="20%"><a href='CaShow?id={{ choice.Cable }}'>{{ choice.Cable }}</a></th>
+                <th width="10%">{{ choice.MainMan }}</th>
+
+                </th>
+            </tr>
+            </tbody>
+        </table>
+        <table id="xD" style="margin-left: 7px" class="table table-bordered table-hover">
+
+            <thead>
+            <tr id="s">
+                <th>A机柜</th>
+                <th>B机柜</th>
+                <th>A机位</th>
+                <th>B机位</th>
+                <th>A端</th>
+                <th>B端</th>
+                <th>分配时间</th>
+            </tr>
+            </thead>
+            <tbody id="SS">
+
+            <tr>
+                <th>{{ choice.Acap }}</th>
+                <th>{{ choice.Bcap }}</th>
+                <th>{{ choice.Aposition }}</th>
+                <th>{{ choice.Bposition }}</th>
+                <th>{{ choice.Aport }}</th>
+                <th>{{ choice.Bport }}</th>
+                <th>{{ choice.StartData }}</th>
+                </th>
+            </tr>
+            </tbody>
+        </table>
+
+
+    {% endfor %}
+    <div  style="width: 1000px">
+        <div style="width:44%;float:left;margin-left: 8px">
+            <form action="" method="" style="margin-left: 1px">
+                <label class="radio-inline">
+                    <input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="已使用"> 已使用
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optionsRadiosinline" id="optionsRadios4" value="未分配"> 未分配
+                </label><label class="radio-inline">
+                <input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="故障"> 故障
+            </label>
+            </form>
+            <table id="xD" style="margin-left: 1px;width: auto" class="table table-bordered table-hover">
+
+                <thead>
+
+                <tr id="s">
+
+                    <th>波道编号</th>
+                    <th>状态</th>
+                </tr>
+
+
+                </thead>
+                <tbody id="tabb">
+
+
+                </tbody>
+            </table>
+            <span class="step-links">
+           <input id="prev" type="button" class="btn btn-default btn-sm" value="上一页">
+        <span class="current" id="cid">
+            当前第一页
+        </span>
+          <input id="next" class=" btn btn-default btn-sm" type="button" value="下一页">
+    <span class="cc" id="toall">
+            总共
+        </span>
+    </span>
+        </div>
+        <div style="width:auto;float:left">
+            <table id='myTable5'>
+                <caption>波道状态</caption>
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>已使用</th>
+                    <th>未分配</th>
+                    <th>故障</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>{{ num }}</th>
+                    <td>{{ use }}</td>
+                    <td>{{ no }}</td>
+                    <td>{{ error }}</td>
+                </tr>
+                </tbody>
+            </table>
+           </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,213 @@
+{% load staticfiles %}
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e7e7e7;
+        background-color: #f3f3f3;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: #666;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    li a.active {
+        color: white;
+        background-color: #4CAF50;
+    }
+
+    #for {
+        margin: auto;
+        width: 50%;
+        margin-top: 200px;
+        padding: 10px;
+    }
+
+</style>
+<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="{% static 'adc/bootstrap-theme.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'adc/bootstrap-theme.min.css' %}"/>
+<script src="{% static 'adc/jquery-3.3.1.js' %}"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+
+<script>
+    function FileUpload() {
+        var form_data = new FormData();
+        var file_info = $('#file_upload')[0].files[0];
+        form_data.append('file', file_info);
+        //if(file_info==undefined)暂且不许要判断是否有附件
+        //alert('你没有选择任何文件');
+        //return false
+        $.ajax({
+            url: 'upload_ajax/',
+            type: 'POST',
+            data: form_data,
+            processData: false,  // tell jquery not to process the data
+            contentType: false, // tell jquery not to set contentType
+            success: function (callback) {
+
+                console.log('ok')
+            }
+        });
+
+    }
+
+    $(document).ready(function () {
+        $("#quee").click(function () {
+
+            if ($("#protect").val() != "") {
+                var pro = $("#protect").val();
+            }
+            if ($("#firenumber").val() != "") {
+                var fis = $("#firenumber").val();
+            }
+
+            $.ajax({
+                url: "abs/",
+
+                data: {firenumber: fis, protect: pro},
+                success: function (data) {
+                    $('#tabb').empty()
+                    jQuery.each(data, function (i, item) {
+
+                        $('#tabb').append(" <tbody><tr>\n" +
+                            "                        <td>" +"<a href=\""+"?id="+item.FibreName+"\" >"+ item.FibreName +"</a>"+ "</td>\n" +
+                            "                        <td>" + item.Acap + "</td>\n" +
+                            "                        <td>" + item.Bcap + "</td>\n" +
+                            "                        <td>" + item.Aposition + "</td>\n" +
+                            "                        <td>" + item.Bposition + "</td>\n" +
+                            "                        <td>" + item.Aport + "</td>\n" +
+                            "                        <td>" + item.Bport + "</td>\n" +
+                            "                        <td></td>\n" +
+                            "                    </tr></tbody>")
+
+                    });
+
+
+                }
+
+            })
+
+        });
+
+    });
+
+</script>
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="btn btn-default navbar-btn float-right">
+                登录
+            </button>
+        </div>
+        <div>
+            <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid ">
+    <div class="pull-left col-xs-2">
+        <ul class="list-group">
+            <li class="list-group-item " style="width: 100%;height: 55px"><a href="{% url 'adc:ShowView' %}">总览</a></li>
+            <li class="list-group-item " style="width: 100%;height: 55px"><a href="{% url 'adc:ShowView' %}">光缆</a></li>
+            <li class="list-group-item " style="width: 100%;height: 55px"><a href="{% url 'adc:ShowView' %}">光纤</a></li>
+            <li class="list-group-item " style="width: 100%;height: 55px"><a href="{% url 'adc:ShowView' %}">波道</a></li>
+            <li class="list-group-item " style="width: 100%;height: 55px"><a href="{% url 'adc:ShowView' %}">波道路由</a></li>
+        </ul>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span9">
+                <div class="col-xs-10">
+                    <div class="span4 bg-success">
+                        <form class="form-inline pull-right" role="form" method="post" enctype="multipart/form-data"
+                              action="upload/"
+                              accept-charset="utf-8">
+                            {% csrf_token %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        数据快捷导入------------
+                                        <br>请注意文件是xlsx类型的文件并且文件名开头为光纤
+
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <input type="file" class="btn-default" name="file">
+                                </div>
+                                <div class="panel-body">
+                                      <span class="glyphicon glyphicon-cloud-upload"><input type="submit"
+                                                                                            class="btn-default"
+                                                                                            value="确定导入"></span>
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                        <ul class="list-group">
+                            <li class="list-group-item"> 光纤编号 <input type="text" name="firenumber" id="firenumber"
+                                                                     placeholder="请输入光纤编号"></li>
+                            <li class="list-group-item"> 维护人 <input type="text" name="protect" id="protect"
+                                                                    placeholder="请输入名字"></li>
+
+                            <li class="list-group-item">
+                                <button type="submit" id="quee" class="btn btn-default">查询</button>
+                            </li>
+                        </ul>
+                    </div><!--/span-->
+                    <div class="span4">
+                        <h2>查询结果</h2>
+                        <table id="tabb" class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>光纤编号</th>
+                                <th>A机柜</th>
+                                <th></th>
+                                <th>A机位</th>
+                                <th>B机位</th>
+                                <th>A端子</th>
+                                <th>B端子</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <!--/span-->
+                </div><!--/row-->
+
+            </div>
+        </div>
+    </div><!--/.fluid-container-->
+
+
+</div>
+</body>
+</html>
